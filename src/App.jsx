@@ -31,6 +31,12 @@ const distribution = [
   { name: "Average", v: 8, c: C.amber }, { name: "Poor", v: 2, c: C.red },
 ];
 
+const Spark = ({ data, color }) => (
+  <ResponsiveContainer width="100%" height={34}>
+    <LineChart data={data}><Line type="monotone" dataKey="v" stroke={color} strokeWidth={2} dot={false} /></LineChart>
+  </ResponsiveContainer>
+);
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
