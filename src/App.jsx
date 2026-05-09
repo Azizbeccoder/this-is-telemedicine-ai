@@ -26,6 +26,11 @@ const healthTrend = WEEK.map((d, i) => ({
   stress: 30 + Math.round(Math.sin(i + 2) * 14), activity: 55 + Math.round(Math.cos(i + 1) * 20),
 }));
 
+const distribution = [
+  { name: "Excellent", v: 60, c: C.teal }, { name: "Good", v: 30, c: C.blue },
+  { name: "Average", v: 8, c: C.amber }, { name: "Poor", v: 2, c: C.red },
+];
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
