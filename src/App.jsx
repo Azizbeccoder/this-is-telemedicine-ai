@@ -66,6 +66,23 @@ function TwinFigure({ size = 200, pulse = true }) {
   );
 }
 
+const NAV = [
+  { id: "landing", label: "Landing", icon: Sparkles },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "progress", label: "Progress", icon: TrendingUp },
+  { id: "vitals", label: "Vitals & Weight", icon: Activity },
+  { id: "appointments", label: "Appointments", icon: Bell },
+  { id: "treatment", label: "Treatment Simulator", icon: Zap },
+  { id: "symptoms", label: "Symptoms", icon: Brain },
+  { id: "sideeffects", label: "Side Effects", icon: AlertCircle },
+  { id: "interactions", label: "Drug Checker", icon: Shield },
+  { id: "meals", label: "Meals", icon: Droplet },
+  { id: "reminders", label: "Reminders", icon: Bell },
+  { id: "settings", label: "Settings", icon: Settings },
+  { id: "twin", label: "Digital Twin", icon: Boxes },
+  { id: "diagnosis", label: "AI Diagnosis", icon: Stethoscope },
+];
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
