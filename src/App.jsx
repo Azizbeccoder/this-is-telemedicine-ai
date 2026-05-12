@@ -9,6 +9,7 @@ import {
   LineChart, Line, AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend,
   PieChart, Pie, Cell, BarChart, Bar, RadialBarChart, RadialBar
 } from "recharts";
+import "./styles.css";
 
 const C = {
   bg: "#080d18", panel: "#0d1424", panel2: "#111a30", line: "#1e2a45",
