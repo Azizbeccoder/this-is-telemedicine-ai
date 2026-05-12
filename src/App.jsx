@@ -110,6 +110,27 @@ function Card({ title, children, style }) {
   );
 }
 
+function Navigation({ go }) {
+  return (
+    <nav className="vt-navbar">
+      <div className="vt-navbar-content">
+        <button className="vt-logo-btn" onClick={() => go("landing")}>
+          <Heart size={24} fill={C.pink} stroke={C.pink} />
+          <span>Vita<b>Twin</b> AI</span>
+        </button>
+        <div className="vt-nav-menu">
+          <button onClick={() => go("features")} className="vt-nav-link">Features</button>
+          <button onClick={() => go("technology")} className="vt-nav-link">Technology</button>
+          <button onClick={() => go("about")} className="vt-nav-link">About</button>
+        </div>
+        <button className="vt-nav-cta" onClick={() => go("dashboard")}>
+          Launch <ChevronRight size={16} />
+        </button>
+      </div>
+    </nav>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
