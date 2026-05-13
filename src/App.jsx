@@ -132,6 +132,90 @@ function Navigation({ go }) {
   );
 }
 
+function Dashboard() {
+  const organs = [
+    { i: Heart, n: "Heart", v: "98%", s: "Healthy", c: C.pink },
+    { i: Brain, n: "Brain", v: "96%", s: "Healthy", c: C.purple },
+    { i: Wind, n: "Lungs", v: "94%", s: "Healthy", c: C.teal },
+    { i: Shield, n: "Immune", v: "90%", s: "Strong", c: C.green },
+  ];
+
+  const metrics = [
+    { t: "Health Score", v: "87", s: "Excellent", c: C.teal },
+    { t: "Age Estimate", v: "28", s: "Actual: 24", c: C.purple },
+    { t: "Risk Level", v: "Low", s: "Keep going!", c: C.green },
+    { t: "Conditions", v: "0", s: "None", c: C.blue },
+  ];
+
+  return (
+    <>
+      <TopBar title="Dashboard" subtitle="Your health at a glance" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 24 }}>
+        {metrics.map((m) => (
+          <Card key={m.t}>
+            <small style={{ color: C.muted, fontSize: 11 }}>{m.t}</small>
+            <b style={{ display: "block", fontSize: 26, margin: "6px 0 4px", color: m.c }}>{m.v}</b>
+            <span style={{ fontSize: 12, color: C.muted }}>{m.s}</span>
+          </Card>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
+        <Card title="Digital Twin Status">
+          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+            <TwinFigure size={180} />
+            <div style={{ flex: 1 }}>
+              {organs.map((o) => (
+                <div key={o.n} style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 10, padding: "10px", background: C.panel, borderRadius: 8 }}>
+                  <o.i size={14} color={o.c} />
+                  <div style={{ flex: 1 }}>
+                    <b style={{ fontSize: 12, display: "block" }}>{o.n}</b>
+                    <small style={{ color: C.muted, fontSize: 11 }}>{o.v} · {o.s}</small>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card title="Today's Activity">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.line}` }}>
+              <span style={{ fontSize: 13 }}><Footprints size={14} style={{ marginRight: 8 }} />Steps</span>
+              <b>8,432 <em style={{ color: C.muted, fontSize: 12 }}>/10,000</em></b>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.line}` }}>
+              <span style={{ fontSize: 13 }}><Flame size={14} style={{ marginRight: 8 }} />Calories</span>
+              <b>1,234 <em style={{ color: C.muted, fontSize: 12 }}>/2,000</em></b>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: `1px solid ${C.line}` }}>
+              <span style={{ fontSize: 13 }}><Moon size={14} style={{ marginRight: 8 }} />Sleep</span>
+              <b>7h 45m</b>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0" }}>
+              <span style={{ fontSize: 13 }}><Zap size={14} style={{ marginRight: 8 }} />Stress</span>
+              <b style={{ color: C.green }}>Low</b>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      <Card title="Weekly Health Trend">
+        <ResponsiveContainer width="100%" height={240}>
+          <LineChart data={healthTrend}>
+            <XAxis dataKey="day" stroke={C.muted} fontSize={11} />
+            <YAxis stroke={C.muted} fontSize={11} />
+            <Tooltip contentStyle={{ background: C.panel2, border: `1px solid ${C.line}`, borderRadius: 8 }} />
+            <Legend />
+            <Line type="monotone" dataKey="heart" stroke={C.pink} strokeWidth={2} name="Heart Rate" />
+            <Line type="monotone" dataKey="sleep" stroke={C.purple} strokeWidth={2} name="Sleep Quality" />
+          </LineChart>
+        </ResponsiveContainer>
+      </Card>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
@@ -180,6 +264,7 @@ export default function VitaTwinAI() {
           </aside>
         )}
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
+          {view === "dashboard" && <Dashboard />}
         </main>
       </div>
     </div>
