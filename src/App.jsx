@@ -216,6 +216,67 @@ function Dashboard() {
   );
 }
 
+function Diagnosis() {
+  const [tab, setTab] = useState("Analysis");
+  const steps = [
+    { s: "Symptom Analysis", st: "Completed" },
+    { s: "AI Processing", st: "Completed" },
+    { s: "Deep Scan", st: "In Progress" },
+    { s: "Cross-Check", st: "Pending" },
+  ];
+  const findings = [
+    { n: "Viral Pneumonia", p: 86, c: C.red },
+    { n: "Bronchitis", p: 45, c: C.amber },
+    { n: "Cold / Flu", p: 23, c: C.blue },
+  ];
+
+  return (
+    <>
+      <TopBar title="AI Diagnosis" subtitle="Symptom analysis & predictions" />
+      <div style={{ display: "flex", gap: 6, marginBottom: 20 }}>
+        {["Symptoms", "Analysis", "Results", "Recommendations"].map((t) => (
+          <button key={t} onClick={() => setTab(t)} style={{ background: tab === t ? `linear-gradient(90deg,${C.purple},${C.teal})` : C.panel, color: tab === t ? "#fff" : C.muted, padding: "8px 16px", borderRadius: 8, border: `1px solid ${tab === t ? "transparent" : C.line}`, cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: 600 }}>
+            {t}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <Card title="Analysis Progress">
+          {steps.map(({ s, st }) => (
+            <div key={s} style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 14 }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", display: "grid", placeItems: "center", border: `1px solid ${st === "Completed" ? C.green : st === "In Progress" ? C.amber : C.line}`, background: st === "Completed" ? `${C.green}22` : st === "In Progress" ? `${C.amber}22` : "transparent", color: st === "Completed" ? C.green : st === "In Progress" ? C.amber : C.muted }}>
+                {st === "Completed" ? <CheckCircle2 size={14} /> : st === "In Progress" ? <Loader2 size={14} className="spin" style={{ animation: "spin 1s linear infinite" }} /> : ""}
+              </div>
+              <div>
+                <b style={{ fontSize: 13, display: "block" }}>{s}</b>
+                <small style={{ color: C.muted, fontSize: 11 }}>{st}</small>
+              </div>
+            </div>
+          ))}
+        </Card>
+
+        <Card title="Top Findings">
+          {findings.map(({ n, p, c }) => (
+            <div key={n} style={{ marginBottom: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <b style={{ fontSize: 13 }}>{n}</b>
+                <span style={{ color: c, fontWeight: 600 }}>{p}%</span>
+              </div>
+              <div style={{ height: 7, background: C.line, borderRadius: 6, overflow: "hidden" }}>
+                <div style={{ width: `${p}%`, height: "100%", background: `linear-gradient(90deg,${c},${C.blue})`, borderRadius: 6 }} />
+              </div>
+            </div>
+          ))}
+          <button style={{ width: "100%", padding: "10px", marginTop: 16, background: `linear-gradient(135deg,${C.purple},${C.teal})`, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 14 }}>
+            View Full Report
+          </button>
+        </Card>
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
@@ -265,6 +326,7 @@ export default function VitaTwinAI() {
         )}
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
           {view === "dashboard" && <Dashboard />}
+          {view === "diagnosis" && <Diagnosis />}
         </main>
       </div>
     </div>
