@@ -331,6 +331,57 @@ function Twin() {
   );
 }
 
+function Analytics() {
+  const metrics = [
+    { t: "Heart Rate", v: "72", u: "bpm", c: C.pink },
+    { t: "Blood O₂", v: "98", u: "%", c: C.teal },
+    { t: "Stress", v: "Low", u: "", c: C.amber },
+    { t: "Sleep", v: "7.5h", u: "avg", c: C.purple },
+  ];
+
+  return (
+    <>
+      <TopBar title="Analytics" subtitle="Health insights & trends" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 24 }}>
+        {metrics.map((m) => (
+          <Card key={m.t}>
+            <small style={{ color: C.muted, fontSize: 11 }}>{m.t}</small>
+            <b style={{ display: "block", fontSize: 24, margin: "8px 0 6px" }}>{m.v}</b>
+            {m.u && <em style={{ fontSize: 12, color: C.muted }}>{m.u}</em>}
+            <div style={{ marginTop: 10 }}>
+              <Spark data={Array.from({ length: 12 }, (_, i) => ({ v: Math.random() * 20 + 70 }))} color={m.c} />
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <Card title="Health Trend (7 days)">
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={healthTrend}>
+              <XAxis dataKey="day" stroke={C.muted} fontSize={11} />
+              <YAxis stroke={C.muted} fontSize={11} />
+              <Tooltip contentStyle={{ background: C.panel2, border: `1px solid ${C.line}` }} />
+              <Line type="monotone" dataKey="heart" stroke={C.pink} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="stress" stroke={C.amber} strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </Card>
+
+        <Card title="Health Distribution">
+          <ResponsiveContainer width="100%" height={260}>
+            <PieChart>
+              <Pie data={distribution} dataKey="v" nameKey="name" innerRadius={50} outerRadius={90} paddingAngle={3}>
+                {distribution.map((d) => <Cell key={d.name} fill={d.c} />)}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
