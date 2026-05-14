@@ -277,6 +277,60 @@ function Diagnosis() {
   );
 }
 
+function Twin() {
+  const [active, setActive] = useState(0);
+  const [run, setRun] = useState(false);
+
+  const scenarios = [
+    { i: TrendingDown, t: "Weight Loss", s: "Fitness Plan" },
+    { i: Zap, t: "High Stress", s: "Work Pressure" },
+    { i: Moon, t: "Better Sleep", s: "8+ Hours" },
+    { i: Droplet, t: "New Medication", s: "Treatment" },
+  ];
+
+  const results = [
+    ["Energy", run ? "+25%" : "—"],
+    ["Immunity", run ? "+18%" : "—"],
+    ["Heart Health", run ? "+20%" : "—"],
+    ["Mental Clarity", run ? "+30%" : "—"],
+  ];
+
+  return (
+    <>
+      <TopBar title="Digital Twin" subtitle="Simulate health scenarios" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr 1fr", gap: 16 }}>
+        <Card title="Simulate Scenarios">
+          {scenarios.map((s, i) => (
+            <button key={s.t} onClick={() => { setActive(i); setRun(false); }} style={{ width: "100%", display: "flex", gap: 10, alignItems: "center", background: active === i ? `linear-gradient(90deg,${C.teal}22,transparent)` : C.panel, color: C.ink, border: `1px solid ${active === i ? C.teal : C.line}`, padding: 12, borderRadius: 10, cursor: "pointer", marginBottom: 10, fontFamily: "inherit", textAlign: "left", transition: ".2s" }}>
+              <s.i size={18} />
+              <div>
+                <b style={{ fontSize: 13, display: "block" }}>{s.t}</b>
+                <small style={{ color: C.muted, fontSize: 11 }}>{s.s}</small>
+              </div>
+            </button>
+          ))}
+        </Card>
+
+        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <TwinFigure size={260} />
+          <button onClick={() => setRun(true)} style={{ marginTop: 16, padding: "12px 24px", background: `linear-gradient(135deg,${C.purple},${C.teal})`, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
+            <Play size={14} /> Run Simulation
+          </button>
+        </Card>
+
+        <Card title="Results">
+          {results.map(([t, v]) => (
+            <div key={t} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px", background: C.panel, borderRadius: 8, marginBottom: 10, fontSize: 13 }}>
+              <span>{t}</span>
+              <b style={{ color: run ? C.green : C.muted }}>{v}</b>
+            </div>
+          ))}
+        </Card>
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
@@ -326,6 +380,7 @@ export default function VitaTwinAI() {
         )}
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
           {view === "dashboard" && <Dashboard />}
+          {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
       </div>
