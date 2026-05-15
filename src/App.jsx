@@ -428,6 +428,9 @@ function Monitoring() {
   );
 }
 
+const ANTHROPIC_ENDPOINT = "/api/anthropic";
+const SYS = "You are VitaTwin AI, a friendly health assistant. Give helpful wellness info in a warm tone. Demo assistant — not medical advice.";
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
