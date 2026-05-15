@@ -382,6 +382,52 @@ function Analytics() {
   );
 }
 
+function Monitoring() {
+  const [vitals, setVitals] = useState({ hr: 72, o2: 98 });
+
+  useEffect(() => {
+    const t = setInterval(() => setVitals((v) => ({
+      hr: 68 + Math.round(Math.random() * 10),
+      o2: 97 + Math.round(Math.random() * 2),
+    })), 2000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <>
+      <TopBar title="Real-Time Monitoring" subtitle={<span style={{ color: C.green }}>● LIVE</span>} />
+
+      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 16 }}>
+        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
+          <Heart size={100} fill={C.red} stroke={C.red} />
+          <b style={{ fontSize: 28 }}>{vitals.hr} bpm</b>
+          <small style={{ color: C.muted }}>Heart Rate</small>
+        </Card>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <Card title="Blood Oxygen">
+            <b style={{ fontSize: 24, display: "block", marginBottom: 10 }}>{vitals.o2}%</b>
+            <ResponsiveContainer width="100%" height={80}>
+              <AreaChart data={Array.from({ length: 20 }, (_, i) => ({ v: vitals.o2 + Math.random() * 2 - 1 }))}>
+                <Area type="monotone" dataKey="v" stroke={C.teal} fill={C.teal} fillOpacity={0.2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </Card>
+
+          <Card title="Temperature">
+            <b style={{ fontSize: 24, display: "block", marginBottom: 10 }}>36.8°C</b>
+            <ResponsiveContainer width="100%" height={80}>
+              <AreaChart data={Array.from({ length: 20 }, (_, i) => ({ v: 36.5 + Math.random() * 0.6 }))}>
+                <Area type="monotone" dataKey="v" stroke={C.amber} fill={C.amber} fillOpacity={0.2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
