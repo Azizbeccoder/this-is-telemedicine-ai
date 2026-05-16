@@ -431,6 +431,95 @@ function Monitoring() {
 const ANTHROPIC_ENDPOINT = "/api/anthropic";
 const SYS = "You are VitaTwin AI, a friendly health assistant. Give helpful wellness info in a warm tone. Demo assistant — not medical advice.";
 
+function Assistant() {
+  const [msgs, setMsgs] = useState([{ role: "assistant", content: "👋 Hi! I'm your VitaTwin AI assistant. Ask me anything about your health.\n\n*(Demo — not medical advice)*" }]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const endRef = useRef(null);
+
+  useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [msgs, busy]);
+
+  const send = async (text) => {
+    const q = (text ?? input).trim();
+    if (!q || busy) return;
+    const next = [...msgs, { role: "user", content: q }];
+    setMsgs(next);
+    setInput("");
+    setBusy(true);
+
+    try {
+      const res = await fetch(ANTHROPIC_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system: SYS,
+          messages: next.map((m) => ({ role: m.role, content: m.content })),
+        }),
+      });
+
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      setMsgs((p) => [...p, { role: "assistant", content: data.message || "No response" }]);
+    } catch (e) {
+      setMsgs((p) => [...p, { role: "assistant", content: `⚠️ Error: ${e.message}` }]);
+    }
+    setBusy(false);
+  };
+
+  return (
+    <>
+      <TopBar title="AI Health Assistant" subtitle="Ask anything about your wellness" />
+      <Card style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 220px)" }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", paddingBottom: 14, borderBottom: `1px solid ${C.line}` }}>
+          <Brain size={18} color={C.teal} />
+          <div>
+            <b style={{ fontSize: 14 }}>VitaTwin Assistant</b>
+            <small style={{ color: C.green, display: "block" }}>● Online</small>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", padding: "16px 0", display: "flex", flexDirection: "column", gap: 12 }}>
+          {msgs.map((m, i) => (
+            <div key={i} style={{ display: "flex", gap: 8, maxWidth: "85%", ...(m.role === "user" && { marginLeft: "auto", flexDirection: "row-reverse" }) }}>
+              {m.role === "assistant" && <Brain size={14} color={C.teal} style={{ flex: "none", marginTop: 4 }} />}
+              <div style={{ background: m.role === "user" ? `linear-gradient(135deg,${C.purple},${C.blue})` : C.panel, color: m.role === "user" ? "#fff" : C.ink, padding: "10px 14px", borderRadius: 12, fontSize: 13, lineHeight: 1.5, wordBreak: "break-word", border: m.role === "user" ? "none" : `1px solid ${C.line}` }}>
+                {m.content}
+              </div>
+            </div>
+          ))}
+          {busy && (
+            <div style={{ display: "flex", gap: 8, maxWidth: "85%" }}>
+              <Brain size={14} color={C.teal} style={{ flex: "none", marginTop: 4 }} />
+              <div style={{ background: C.panel, color: C.muted, padding: "10px 14px", borderRadius: 12, display: "flex", alignItems: "center", gap: 8, border: `1px solid ${C.line}` }}>
+                <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> thinking…
+              </div>
+            </div>
+          )}
+          <div ref={endRef} />
+        </div>
+
+        <div style={{ display: "flex", gap: 10, paddingTop: 14, borderTop: `1px solid ${C.line}` }}>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
+            placeholder="Ask anything…"
+            disabled={busy}
+            style={{ flex: 1, background: C.panel, border: `1px solid ${C.line}`, borderRadius: 10, padding: "12px 14px", color: C.ink, fontFamily: "inherit", fontSize: 13, outline: "none" }}
+          />
+          <button
+            onClick={() => send()}
+            disabled={busy || !input.trim()}
+            style={{ width: 46, height: 46, background: `linear-gradient(135deg,${C.teal},${C.blue})`, border: "none", borderRadius: 10, color: "#000", cursor: "pointer", display: "grid", placeItems: "center" }}
+          >
+            {busy ? <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> : <Send size={16} />}
+          </button>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
