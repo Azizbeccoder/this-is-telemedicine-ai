@@ -520,6 +520,38 @@ function Assistant() {
   );
 }
 
+function Login({ go }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    localStorage.setItem("user", JSON.stringify({ email, name: email.split("@")[0] }));
+    go("dashboard");
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg,${C.bg},${C.panel})` }}>
+      <Card style={{ maxWidth: 400, width: "90%" }}>
+        <h2 style={{ textAlign: "center", marginBottom: 24 }}>Login to VitaTwin AI</h2>
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: "block", marginBottom: 6, fontSize: 13, fontWeight: 500 }}>Email</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" style={{ width: "100%", padding: "10px 12px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", outline: "none" }} />
+        </div>
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ display: "block", marginBottom: 6, fontSize: 13, fontWeight: 500 }}>Password</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={{ width: "100%", padding: "10px 12px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", outline: "none" }} />
+        </div>
+        <button onClick={handleLogin} style={{ width: "100%", padding: "12px", background: `linear-gradient(135deg,${C.purple},${C.teal})`, color: "#fff", border: "none", borderRadius: 8, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+          Sign In
+        </button>
+        <p style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: C.muted }}>
+          Demo: Use any email • Try email@example.com
+        </p>
+      </Card>
+    </div>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
