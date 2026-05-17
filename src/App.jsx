@@ -692,6 +692,34 @@ function HeroSection({ go }) {
   );
 }
 
+function Features() {
+  const featureList = [
+    { icon: Heart, title: "Real-Time Monitoring", desc: "Track your vital signs continuously with advanced sensors and AI analysis" },
+    { icon: Brain, title: "AI Diagnosis", desc: "Get instant symptom analysis and personalized health insights powered by machine learning" },
+    { icon: Boxes, title: "Digital Twin", desc: "Simulate how your body responds to different treatments and lifestyle changes" },
+    { icon: TrendingUp, title: "Health Analytics", desc: "Visualize trends and patterns in your health data over time" },
+    { icon: Radio, title: "Real-Time Monitoring", desc: "24/7 health monitoring with instant alerts for abnormalities" },
+    { icon: MessageSquare, title: "AI Assistant", desc: "Chat with our intelligent health assistant for personalized recommendations" },
+  ];
+
+  return (
+    <>
+      <TopBar title="Features" subtitle="Everything you need for health excellence" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+        {featureList.map((f) => (
+          <Card key={f.title} style={{ cursor: "pointer", transition: ".2s", border: `1px solid ${C.line}` }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.teal} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}>
+            <div style={{ marginBottom: 12 }}>
+              <f.icon size={28} color={C.teal} />
+            </div>
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 16, fontWeight: 600 }}>{f.title}</h3>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{f.desc}</p>
+          </Card>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
