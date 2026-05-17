@@ -600,6 +600,98 @@ function Profile({ user }) {
   );
 }
 
+function HeroSection({ go }) {
+  return (
+    <section className="vt-hero-section">
+      <div className="vt-hero-grid">
+        <div className="vt-hero-content">
+          <div className="vt-badge">🚀 Enterprise AI Health Platform</div>
+          <h1 className="vt-hero-title">
+            Your Health.<br/>
+            <span>Predicted & Optimized.</span>
+          </h1>
+          <p className="vt-hero-subtitle">Advanced health monitoring with AI-powered diagnostics, predictive analytics, and personalized treatment simulations. Your complete digital health twin.</p>
+
+          {/* Key Features Pills */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24, marginTop: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", background: `${C.teal}15`, border: `1px solid ${C.teal}30`, borderRadius: 20, fontSize: 12, color: C.teal, fontWeight: 600 }}>
+              <Heart size={14} /> Real-Time Monitoring
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", background: `${C.purple}15`, border: `1px solid ${C.purple}30`, borderRadius: 20, fontSize: 12, color: C.purple, fontWeight: 600 }}>
+              <Brain size={14} /> AI Diagnostics
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", background: `${C.pink}15`, border: `1px solid ${C.pink}30`, borderRadius: 20, fontSize: 12, color: C.pink, fontWeight: 600 }}>
+              <Zap size={14} /> Treatment Simulator
+            </div>
+          </div>
+
+          <div className="vt-hero-ctas">
+            <button className="vt-btn primary" onClick={() => go("dashboard")}>
+              <Play size={16} /> Launch Dashboard
+            </button>
+            <button className="vt-btn secondary" onClick={() => go("treatment")}>
+              <Zap size={16} /> Try Simulator
+            </button>
+          </div>
+
+          {/* Advanced Stats */}
+          <div className="vt-hero-stats">
+            <div className="vt-stat-item">
+              <b style={{ color: C.teal }}>14+</b>
+              <small>Health Features</small>
+            </div>
+            <div className="vt-stat-item">
+              <b style={{ color: C.purple }}>50+</b>
+              <small>AI Models</small>
+            </div>
+            <div className="vt-stat-item">
+              <b style={{ color: C.pink }}>100%</b>
+              <small>Private AI</small>
+            </div>
+          </div>
+
+          {/* Trust Indicators */}
+          <div style={{ marginTop: 20, padding: "12px 16px", background: `${C.green}10`, border: `1px solid ${C.green}30`, borderRadius: 12, display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: C.green }}>
+            <CheckCircle2 size={16} />
+            <span>End-to-end encrypted • HIPAA compliant • No data tracking</span>
+          </div>
+        </div>
+
+        <div className="vt-hero-visual">
+          <TwinFigure size={280} />
+
+          {/* Floating Stats Cards */}
+          <div style={{ position: "absolute", top: "20%", right: "-60px", background: `linear-gradient(135deg, ${C.panel2}, ${C.panel})`, border: `1px solid ${C.line}`, borderRadius: 12, padding: 12, width: 140, boxShadow: `0 20px 40px ${C.teal}22`, animation: "float-up 3s ease-in-out infinite" }}>
+            <small style={{ color: C.muted, fontSize: 10 }}>HEART RATE</small>
+            <b style={{ display: "block", fontSize: 20, color: C.pink, marginTop: 4 }}>72 BPM</b>
+            <small style={{ color: C.green, fontSize: 10 }}>Normal Range</small>
+          </div>
+
+          <div style={{ position: "absolute", bottom: "30%", right: "-80px", background: `linear-gradient(135deg, ${C.panel2}, ${C.panel})`, border: `1px solid ${C.line}`, borderRadius: 12, padding: 12, width: 160, boxShadow: `0 20px 40px ${C.purple}22`, animation: "float-down 3s ease-in-out infinite" }}>
+            <small style={{ color: C.muted, fontSize: 10 }}>HEALTH SCORE</small>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 6 }}>
+              <b style={{ fontSize: 24, color: C.purple }}>87</b>
+              <small style={{ color: C.green, fontWeight: 600 }}>↑ 5%</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Animation Styles */}
+      <style>{`
+        @keyframes float-up {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+        @keyframes float-down {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(15px); }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
