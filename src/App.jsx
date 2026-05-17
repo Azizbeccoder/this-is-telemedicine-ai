@@ -552,6 +552,54 @@ function Login({ go }) {
   );
 }
 
+function Profile({ user }) {
+  return (
+    <>
+      <TopBar title="Profile" subtitle="Your account information" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+        <Card title="Personal Information">
+          <div style={{ display: "flex", gap: 16, marginBottom: 20, alignItems: "center" }}>
+            <div style={{ width: 80, height: 80, borderRadius: "50%", background: `linear-gradient(135deg,${C.purple},${C.teal})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 32, fontWeight: 700 }}>
+              {user?.name?.[0]?.toUpperCase() || "A"}
+            </div>
+            <div>
+              <h3 style={{ margin: "0 0 4px 0" }}>{user?.name || "Alex"}</h3>
+              <p style={{ margin: 0, color: C.muted, fontSize: 13 }}>{user?.email}</p>
+              <p style={{ margin: "6px 0 0 0", color: C.green, fontSize: 12, fontWeight: 600 }}>● Premium Member</p>
+            </div>
+          </div>
+
+          <div style={{ paddingTop: 16, borderTop: `1px solid ${C.line}` }}>
+            <p style={{ fontSize: 13, color: C.muted, margin: 0, marginBottom: 12 }}>Member Since</p>
+            <b style={{ display: "block" }}>January 2026</b>
+          </div>
+        </Card>
+
+        <Card title="Health Profile">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <small style={{ color: C.muted, fontSize: 11 }}>Age</small>
+              <b style={{ display: "block" }}>24 years</b>
+            </div>
+            <div style={{ paddingTop: 12, borderTop: `1px solid ${C.line}` }}>
+              <small style={{ color: C.muted, fontSize: 11 }}>Height</small>
+              <b style={{ display: "block" }}>5'10" (178 cm)</b>
+            </div>
+            <div style={{ paddingTop: 12, borderTop: `1px solid ${C.line}` }}>
+              <small style={{ color: C.muted, fontSize: 11 }}>Weight</small>
+              <b style={{ display: "block" }}>72 kg (158 lbs)</b>
+            </div>
+            <div style={{ paddingTop: 12, borderTop: `1px solid ${C.line}` }}>
+              <small style={{ color: C.muted, fontSize: 11 }}>Blood Type</small>
+              <b style={{ display: "block" }}>O+</b>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
