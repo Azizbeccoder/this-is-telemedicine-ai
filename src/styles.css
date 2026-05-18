@@ -434,3 +434,100 @@ a:hover {
   line-height: 1.6;
   margin: 0;
 }
+
+/* ==================== DEMO SECTION ==================== */
+.vt-demo-section {
+  padding: 100px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.vt-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.vt-demo-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.vt-demo-item:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.1);
+  transform: translateY(-4px);
+}
+
+.vt-demo-item h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+.vt-demo-item p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  flex: 1;
+  line-height: 1.6;
+}
+
+.vt-demo-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 28px;
+  transition: all var(--transition-base);
+}
+
+.vt-demo-icon.heart {
+  background: rgba(236, 72, 153, 0.2);
+  color: var(--accent-pink);
+}
+
+.vt-demo-icon.brain {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--accent-purple);
+}
+
+.vt-demo-icon.twin {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--accent-cyan);
+}
+
+.vt-demo-item:hover .vt-demo-icon {
+  transform: scale(1.12);
+}
+
+.vt-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--transition-fast);
+}
+
+.vt-link-btn:hover {
+  gap: 10px;
+  color: var(--accent-purple);
+}
