@@ -720,6 +720,49 @@ function Features() {
   );
 }
 
+function Technology() {
+  const techStack = [
+    { name: "React 18", desc: "Modern UI framework with hooks and concurrent features" },
+    { name: "Vite", desc: "Lightning-fast build tool for optimal development experience" },
+    { name: "Recharts", desc: "Beautiful, responsive data visualization library" },
+    { name: "Ollama", desc: "Local AI models running privately on your machine" },
+    { name: "Express.js", desc: "Lightweight server for API proxying and data processing" },
+    { name: "lucide-react", desc: "Clean, consistent icon library for modern interfaces" },
+  ];
+
+  return (
+    <>
+      <TopBar title="Technology Stack" subtitle="Built with modern, cutting-edge tools" />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20, marginBottom: 24 }}>
+        {techStack.map((t) => (
+          <Card key={t.name} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div>
+              <h3 style={{ margin: "0 0 8px 0", fontSize: 16, fontWeight: 600, color: C.teal }}>{t.name}</h3>
+              <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{t.desc}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+      <Card title="Architecture" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ padding: 16, background: C.panel, borderRadius: 8, borderLeft: `3px solid ${C.teal}` }}>
+            <b style={{ display: "block", marginBottom: 6 }}>Frontend</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>React components with responsive design, real-time updates, and smooth animations</p>
+          </div>
+          <div style={{ padding: 16, background: C.panel, borderRadius: 8, borderLeft: `3px solid ${C.purple}` }}>
+            <b style={{ display: "block", marginBottom: 6 }}>Backend Proxy</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>Express.js server handling API requests and forwarding to local AI models</p>
+          </div>
+          <div style={{ padding: 16, background: C.panel, borderRadius: 8, borderLeft: `3px solid ${C.pink}` }}>
+            <b style={{ display: "block", marginBottom: 6 }}>AI Engine</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>Local Ollama models (Phi3, Mistral, Llama3) for privacy-first AI processing</p>
+          </div>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
