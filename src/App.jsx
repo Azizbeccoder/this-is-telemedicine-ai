@@ -763,6 +763,62 @@ function Technology() {
   );
 }
 
+function About() {
+  return (
+    <>
+      <TopBar title="About VitaTwin AI" subtitle="Transforming personal health management" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+        <Card>
+          <h3 style={{ margin: "0 0 12px 0", fontSize: 16, fontWeight: 600 }}>Our Mission</h3>
+          <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+            VitaTwin AI empowers individuals to take control of their health through advanced AI-driven insights and personalized digital health twins. We believe healthcare should be predictive, not reactive.
+          </p>
+        </Card>
+        <Card>
+          <h3 style={{ margin: "0 0 12px 0", fontSize: 16, fontWeight: 600 }}>Privacy First</h3>
+          <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+            All AI processing happens locally on your device. Your health data never leaves your machine. We use open-source Ollama for complete transparency and control.
+          </p>
+        </Card>
+      </div>
+
+      <Card title="Developer Information" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div>
+            <b style={{ color: C.teal, display: "block", marginBottom: 4 }}>Student Developer</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>Abdulaziz (Student ID: 24200713)</p>
+          </div>
+          <div>
+            <b style={{ color: C.teal, display: "block", marginBottom: 4 }}>Project Status</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>Educational demonstration • All health data is fictional • Not for clinical use</p>
+          </div>
+          <div>
+            <b style={{ color: C.teal, display: "block", marginBottom: 4 }}>Year</b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted }}>© 2026 VitaTwin AI</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card title="Key Highlights">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8, textAlign: "center" }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: C.teal, marginBottom: 6 }}>7</div>
+            <small style={{ color: C.muted, display: "block" }}>Key Pages</small>
+          </div>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8, textAlign: "center" }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: C.purple, marginBottom: 6 }}>3</div>
+            <small style={{ color: C.muted, display: "block" }}>AI Models</small>
+          </div>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8, textAlign: "center" }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: C.pink, marginBottom: 6 }}>∞</div>
+            <small style={{ color: C.muted, display: "block" }}>Possibilities</small>
+          </div>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("dashboard");
   const [user, setUser] = useState(() => {
