@@ -932,6 +932,106 @@ function Landing({ go }) {
   );
 }
 
+function LoginSignup({ onLogin }) {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 800));
+
+    if (!email || !password || (isSignUp && !name)) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Invalid email format");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
+    const userData = {
+      id: Date.now(),
+      name: isSignUp ? name : email.split("@")[0],
+      email,
+      createdAt: new Date().toISOString(),
+      health: { age: 24, height: "5'10\"", weight: 72, bloodType: "O+", conditions: [], medications: [] },
+      stats: { healthScore: 87, riskLevel: "Low", totalCheckups: 5, lastCheckup: new Date().toISOString() }
+    };
+
+    localStorage.setItem("user", JSON.stringify(userData));
+    setLoading(false);
+    onLogin(userData);
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: `linear-gradient(135deg, ${C.bg}, ${C.panel})`, padding: "20px" }}>
+      <div style={{ maxWidth: 480, width: "100%", background: `linear-gradient(180deg, ${C.panel2}, ${C.panel})`, border: `1.5px solid ${C.line}`, borderRadius: 20, padding: 40, boxShadow: `0 24px 64px rgba(0,0,0,0.3)` }}>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}><Heart size={32} fill={C.pink} stroke={C.pink} /></div>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, marginBottom: 8 }}>Vita<b style={{ color: C.teal }}>Twin</b> AI</h1>
+          <p style={{ margin: 0, color: C.muted, fontSize: 14 }}>{isSignUp ? "Create your health profile" : "Welcome back"}</p>
+        </div>
+
+        <div style={{ display: "flex", gap: 8, marginBottom: 28, background: C.panel, padding: 4, borderRadius: 12 }}>
+          <button onClick={() => setIsSignUp(false)} style={{ flex: 1, padding: "10px 16px", background: !isSignUp ? `linear-gradient(135deg, ${C.purple}, ${C.teal})` : "transparent", color: !isSignUp ? "#fff" : C.muted, border: "none", borderRadius: 10, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 14, transition: "all 0.2s" }}>Sign In</button>
+          <button onClick={() => setIsSignUp(true)} style={{ flex: 1, padding: "10px 16px", background: isSignUp ? `linear-gradient(135deg, ${C.purple}, ${C.teal})` : "transparent", color: isSignUp ? "#fff" : C.muted, border: "none", borderRadius: 10, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 14, transition: "all 0.2s" }}>Sign Up</button>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {isSignUp && (
+            <div>
+              <label style={{ display: "block", marginBottom: 8, fontSize: 13, fontWeight: 600, color: C.ink }}>Full Name</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" style={{ width: "100%", padding: "12px 14px", background: C.panel, border: `1.5px solid ${C.line}`, borderRadius: 10, color: C.ink, fontFamily: "inherit", fontSize: 14, outline: "none", transition: "border-color 0.2s", boxSizing: "border-box" }} onFocus={(e) => e.target.style.borderColor = C.teal} onBlur={(e) => e.target.style.borderColor = C.line} />
+            </div>
+          )}
+
+          <div>
+            <label style={{ display: "block", marginBottom: 8, fontSize: 13, fontWeight: 600, color: C.ink }}>Email Address</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" style={{ width: "100%", padding: "12px 14px", background: C.panel, border: `1.5px solid ${C.line}`, borderRadius: 10, color: C.ink, fontFamily: "inherit", fontSize: 14, outline: "none", transition: "border-color 0.2s", boxSizing: "border-box" }} onFocus={(e) => e.target.style.borderColor = C.teal} onBlur={(e) => e.target.style.borderColor = C.line} />
+          </div>
+
+          <div>
+            <label style={{ display: "block", marginBottom: 8, fontSize: 13, fontWeight: 600, color: C.ink }}>Password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" style={{ width: "100%", padding: "12px 14px", background: C.panel, border: `1.5px solid ${C.line}`, borderRadius: 10, color: C.ink, fontFamily: "inherit", fontSize: 14, outline: "none", transition: "border-color 0.2s", boxSizing: "border-box" }} onFocus={(e) => e.target.style.borderColor = C.teal} onBlur={(e) => e.target.style.borderColor = C.line} />
+          </div>
+
+          {error && (<div style={{ padding: 12, background: `${C.red}22`, border: `1px solid ${C.red}`, borderRadius: 10, color: C.red, fontSize: 13, fontWeight: 600 }}>{error}</div>)}
+
+          <button type="submit" disabled={loading} style={{ width: "100%", padding: "12px 16px", background: `linear-gradient(135deg, ${C.purple}, ${C.teal})`, color: "#fff", border: "none", borderRadius: 10, cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", fontWeight: 700, fontSize: 14, transition: "all 0.2s", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, opacity: loading ? 0.8 : 1 }}>
+            {loading ? (<><Loader2 size={16} className="spin" /> Processing...</>) : (isSignUp ? "Create Account" : "Sign In")}
+          </button>
+        </form>
+
+        <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${C.line}`, textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 13, color: C.muted }}>
+            {isSignUp ? "Already have an account? " : "Don't have an account? "}
+            <button onClick={() => setIsSignUp(!isSignUp)} style={{ background: "none", border: "none", color: C.teal, cursor: "pointer", fontWeight: 600, fontFamily: "inherit", fontSize: 13 }}>{isSignUp ? "Sign in" : "Sign up"}</button>
+          </p>
+        </div>
+
+        <div style={{ marginTop: 20, padding: 12, background: `${C.blue}15`, border: `1px solid ${C.blue}30`, borderRadius: 10 }}>
+          <p style={{ margin: 0, fontSize: 12, color: C.blue, fontWeight: 600 }}>💡 Demo: Use any email/password (min 6 chars)</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("landing");
   const [user, setUser] = useState(() => {
@@ -981,6 +1081,7 @@ export default function VitaTwinAI() {
         )}
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
           {view === "landing" && <Landing go={handleGoToDashboard} />}
+          {view === "login" && <LoginSignup onLogin={handleLogin} />}
           {view === "dashboard" && <Dashboard />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
