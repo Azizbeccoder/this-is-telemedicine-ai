@@ -819,8 +819,121 @@ function About() {
   );
 }
 
+function Landing({ go }) {
+  const features = [
+    { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
+    { icon: Brain, title: "AI Diagnosis", desc: "Intelligent symptom analysis powered by ML models", badge: "🧠 Advanced" },
+    { icon: Boxes, title: "Digital Twin", desc: "Simulate health scenarios and predict outcomes", badge: "🚀 Premium" },
+    { icon: TrendingUp, title: "Analytics", desc: "Deep insights into your health trends over time", badge: "📈 Data" },
+    { icon: Shield, title: "Privacy First", desc: "100% encrypted, on-device AI processing", badge: "🔒 Secure" },
+    { icon: Zap, title: "Treatment Sim", desc: "Predict effectiveness and side effects instantly", badge: "💊 Clinical" },
+  ];
+
+  const demos = [
+    { icon: Heart, title: "Heart Health", desc: "Monitor blood pressure, heart rate, and cardiac patterns", color: C.pink },
+    { icon: Brain, title: "Mental Health", desc: "Track stress levels and get personalized wellness advice", color: C.purple },
+    { icon: Boxes, title: "Digital Twin", desc: "See how your body responds to different treatments", color: C.teal },
+  ];
+
+  return (
+    <div className="vt-landing-page">
+      <Navigation go={go} />
+      <HeroSection go={go} />
+
+      {/* Features Section */}
+      <section className="vt-features-section" id="features">
+        <div className="vt-section-header">
+          <h2>Powerful Features</h2>
+          <p>Complete health management with AI-powered insights</p>
+        </div>
+        <div className="vt-features-grid">
+          {features.map((f, i) => (
+            <div key={i} className="vt-feature-card" style={{ position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 12, right: 12, fontSize: 10, fontWeight: 600, background: `${f.icon === Heart ? C.pink : f.icon === Brain ? C.purple : f.icon === Boxes ? C.teal : C.blue}22`, color: f.icon === Heart ? C.pink : f.icon === Brain ? C.purple : f.icon === Boxes ? C.teal : C.blue, padding: "4px 10px", borderRadius: 12 }}>
+                {f.badge}
+              </div>
+              <div className="vt-feature-icon"><f.icon size={24} /></div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+              <button style={{ width: "100%", marginTop: 12, padding: "8px 12px", background: `${f.icon === Heart ? C.pink : f.icon === Brain ? C.purple : f.icon === Boxes ? C.teal : C.blue}22`, color: f.icon === Heart ? C.pink : f.icon === Brain ? C.purple : f.icon === Boxes ? C.teal : C.blue, border: "none", borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s" }} onClick={() => f.title === "Real-Time Monitoring" ? go("vitals") : f.title === "AI Diagnosis" ? go("diagnosis") : f.title === "Digital Twin" ? go("twin") : f.title === "Analytics" ? go("progress") : f.title === "Privacy First" ? go("settings") : go("treatment")}>
+                Learn More →
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Demo Section */}
+      <section style={{ padding: "100px 40px", maxWidth: "1600px", margin: "0 auto" }}>
+        <div className="vt-section-header">
+          <h2>Try It Now</h2>
+          <p>Explore key features with real-time demos</p>
+        </div>
+        <div className="vt-demo-grid">
+          {demos.map((d, i) => (
+            <div key={i} className="vt-demo-item" style={{ background: `linear-gradient(135deg, ${d.color}15, transparent)`, borderColor: d.color + "30" }}>
+              <div className={`vt-demo-icon ${d.title === "Heart Health" ? "heart" : d.title === "Mental Health" ? "brain" : "twin"}`}>
+                <d.icon size={32} />
+              </div>
+              <h4>{d.title}</h4>
+              <p>{d.desc}</p>
+              <button className="vt-link-btn" onClick={() => d.title === "Heart Health" ? go("vitals") : d.title === "Mental Health" ? go("symptoms") : go("twin")}>
+                Explore {d.title}
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="vt-cta-section">
+        <div className="vt-cta-content">
+          <h2>Ready to Transform Your Health?</h2>
+          <p>Join thousands using VitaTwin AI for smarter, data-driven health decisions</p>
+          <div style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 8 }}>
+            <button className="vt-btn primary" onClick={() => go("dashboard")}>
+              Get Started Free
+            </button>
+            <button className="vt-btn secondary" onClick={() => go("diagnosis")}>
+              See AI in Action
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="vt-footer">
+        <div className="vt-footer-content">
+          <div className="vt-footer-col">
+            <div className="vt-footer-logo">
+              <Heart size={20} fill={C.pink} stroke={C.pink} />
+              VitaTwin AI
+            </div>
+            <p>Advanced health monitoring with local AI processing</p>
+          </div>
+          <div className="vt-footer-col">
+            <h4>Product</h4>
+            <a onClick={() => go("dashboard")}>Dashboard</a>
+            <a onClick={() => go("treatment")}>Treatment Simulator</a>
+            <a onClick={() => go("diagnosis")}>AI Diagnosis</a>
+          </div>
+          <div className="vt-footer-col">
+            <h4>Company</h4>
+            <a>About</a>
+            <a>Privacy Policy</a>
+            <a>Terms of Service</a>
+          </div>
+        </div>
+        <div className="vt-footer-bottom">
+          © 2026 VitaTwin AI • Abdulaziz (Student ID: 24200713) • Enterprise Health AI Platform
+        </div>
+      </footer>
+    </div>
+  );
+}
+
 export default function VitaTwinAI() {
-  const [view, setView] = useState("dashboard");
+  const [view, setView] = useState("landing");
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
@@ -867,6 +980,7 @@ export default function VitaTwinAI() {
           </aside>
         )}
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
+          {view === "landing" && <Landing go={handleGoToDashboard} />}
           {view === "dashboard" && <Dashboard />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
