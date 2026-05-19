@@ -531,3 +531,34 @@ a:hover {
   gap: 10px;
   color: var(--accent-purple);
 }
+
+/* ==================== CTA SECTION ==================== */
+.vt-cta-section {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), transparent);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 100px 40px;
+  text-align: center;
+}
+
+.vt-cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.vt-cta-content h2 {
+  font-size: 44px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.vt-cta-content p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
