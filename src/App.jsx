@@ -1032,6 +1032,61 @@ function LoginSignup({ onLogin }) {
   );
 }
 
+function UserProfilePage({ user, onLogout, go }) {
+  const stats = [
+    { label: "Health Score", value: user?.stats?.healthScore || 87, color: C.teal },
+    { label: "Risk Level", value: user?.stats?.riskLevel || "Low", color: C.green },
+    { label: "Total Checkups", value: user?.stats?.totalCheckups || 5, color: C.purple },
+  ];
+
+  return (
+    <>
+      <TopBar title="My Profile" subtitle="Your account & health information" />
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 24, marginBottom: 24 }}>
+        <Card>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, textAlign: "center" }}>
+            <div style={{ width: 100, height: 100, borderRadius: "50%", background: `linear-gradient(135deg, ${C.purple}, ${C.teal})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 40, fontWeight: 700, margin: "0 auto" }}>{user?.name?.[0]?.toUpperCase() || "U"}</div>
+            <div>
+              <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>{user?.name || "User"}</h2>
+              <p style={{ margin: "6px 0 0 0", color: C.muted, fontSize: 13 }}>{user?.email}</p>
+              <p style={{ margin: "8px 0 0 0", color: C.green, fontSize: 12, fontWeight: 600 }}>● Premium Member</p>
+            </div>
+            <div style={{ paddingTop: 16, borderTop: `1px solid ${C.line}` }}>
+              <small style={{ color: C.muted, fontSize: 11 }}>MEMBER SINCE</small>
+              <b style={{ display: "block", marginTop: 4 }}>January 2026</b>
+            </div>
+            <button onClick={onLogout} style={{ width: "100%", padding: "10px 16px", background: `${C.red}22`, color: C.red, border: `1.5px solid ${C.red}30`, borderRadius: 10, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 13, transition: "all 0.2s" }}>Logout</button>
+          </div>
+        </Card>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24 }}>
+          {stats.map((s) => (
+            <Card key={s.label}>
+              <small style={{ color: C.muted, fontSize: 11 }}>{s.label}</small>
+              <b style={{ display: "block", fontSize: 28, margin: "6px 0 4px", color: s.color }}>{s.value}</b>
+            </Card>
+          ))}
+        </div>
+      </div>
+      <Card title="Health Information" style={{ marginBottom: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+          <div><small style={{ color: C.muted, fontSize: 11, textTransform: "uppercase" }}>Age</small><b style={{ display: "block", marginTop: 8 }}>{user?.health?.age || 24} years</b></div>
+          <div><small style={{ color: C.muted, fontSize: 11, textTransform: "uppercase" }}>Height</small><b style={{ display: "block", marginTop: 8 }}>{user?.health?.height || "5'10\""}</b></div>
+          <div><small style={{ color: C.muted, fontSize: 11, textTransform: "uppercase" }}>Weight</small><b style={{ display: "block", marginTop: 8 }}>{user?.health?.weight || 72} kg</b></div>
+          <div><small style={{ color: C.muted, fontSize: 11, textTransform: "uppercase" }}>Blood Type</small><b style={{ display: "block", marginTop: 8 }}>{user?.health?.bloodType || "O+"}</b></div>
+        </div>
+      </Card>
+      <Card title="Quick Actions">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          <button onClick={() => go("vitals")} style={{ padding: "16px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 10, cursor: "pointer", fontFamily: "inherit", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: C.ink, transition: "all 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.teal} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}><Activity size={20} color={C.teal} /><small style={{ fontWeight: 600, fontSize: 12 }}>Log Vitals</small></button>
+          <button onClick={() => go("appointments")} style={{ padding: "16px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 10, cursor: "pointer", fontFamily: "inherit", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: C.ink, transition: "all 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.purple} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}><Bell size={20} color={C.purple} /><small style={{ fontWeight: 600, fontSize: 12 }}>Appointments</small></button>
+          <button onClick={() => go("treatment")} style={{ padding: "16px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 10, cursor: "pointer", fontFamily: "inherit", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: C.ink, transition: "all 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.pink} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}><Zap size={20} color={C.pink} /><small style={{ fontWeight: 600, fontSize: 12 }}>Treatments</small></button>
+          <button onClick={() => go("reminders")} style={{ padding: "16px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 10, cursor: "pointer", fontFamily: "inherit", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, color: C.ink, transition: "all 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.blue} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}><Bell size={20} color={C.blue} /><small style={{ fontWeight: 600, fontSize: 12 }}>Reminders</small></button>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 export default function VitaTwinAI() {
   const [view, setView] = useState("landing");
   const [user, setUser] = useState(() => {
@@ -1082,6 +1137,7 @@ export default function VitaTwinAI() {
         <main style={{ flex: 1, padding: view === "landing" || view === "login" ? 0 : "26px", overflowX: "hidden", overflowY: "auto" }}>
           {view === "landing" && <Landing go={handleGoToDashboard} />}
           {view === "login" && <LoginSignup onLogin={handleLogin} />}
+          {view === "profile" && <UserProfilePage user={user} onLogout={handleLogout} go={setView} />}
           {view === "dashboard" && <Dashboard />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
