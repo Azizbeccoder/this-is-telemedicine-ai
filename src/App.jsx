@@ -819,6 +819,485 @@ function About() {
   );
 }
 
+function TreatmentSimulator() {
+  const commonConditions = [
+    "Type 2 Diabetes", "Hypertension", "High Cholesterol", "Heart Disease",
+    "Asthma", "COPD", "Depression", "Anxiety", "Hypothyroidism",
+    "Acid Reflux (GERD)", "Arthritis", "Migraine", "High Blood Pressure",
+    "Atrial Fibrillation", "Diabetes Type 1", "Bronchitis", "Pneumonia"
+  ];
+
+  const treatmentDatabase = {
+    "Metformin": { condition: "Diabetes", category: "Antidiabetic", contraindications: ["Kidney Disease"], allergies: [], interactions: ["Contrast dye"], alternatives: ["Lisinopril", "Losartan"], generic: 15, brand: 120, insurance: true, dosage: { base: 500, max: 2000, unit: "mg" }, severity: { mild: "500mg daily", moderate: "1000mg daily", severe: "2000mg daily" } },
+    "Lisinopril": { condition: "Hypertension", category: "ACE Inhibitor", contraindications: ["Angioedema"], allergies: [], interactions: ["NSAIDs", "Potassium"], alternatives: ["Losartan", "Amlodipine"], generic: 10, brand: 95, insurance: true, dosage: { base: 10, max: 40, unit: "mg" }, severity: { mild: "10mg daily", moderate: "20mg daily", severe: "40mg daily" } },
+    "Atorvastatin": { condition: "Cholesterol", category: "Statin", contraindications: ["Liver Disease"], allergies: [], interactions: ["Grapefruit"], alternatives: ["Rosuvastatin", "Omeprazole"], generic: 12, brand: 150, insurance: true, dosage: { base: 20, max: 80, unit: "mg" }, severity: { mild: "20mg daily", moderate: "40mg daily", severe: "80mg daily" } },
+    "Amoxicillin": { condition: "Infection", category: "Antibiotic", contraindications: ["Penicillin Allergy"], allergies: ["Penicillin"], interactions: ["Oral contraceptives"], alternatives: ["Doxycycline"], generic: 8, brand: 80, insurance: true, dosage: { base: 250, max: 1000, unit: "mg" }, severity: { mild: "250mg 3x daily", moderate: "500mg 3x daily", severe: "1000mg 3x daily" } },
+    "Omeprazole": { condition: "GERD", category: "PPI", contraindications: [], allergies: [], interactions: ["Iron", "Calcium"], alternatives: ["Atorvastatin", "Metformin"], generic: 6, brand: 120, insurance: true, dosage: { base: 20, max: 40, unit: "mg" }, severity: { mild: "20mg daily", moderate: "20mg daily", severe: "40mg daily" } },
+    "Sertraline": { condition: "Depression", category: "SSRI", contraindications: ["MAOI use"], allergies: [], interactions: ["NSAIDs"], alternatives: ["Fluoxetine", "Levothyroxine"], generic: 11, brand: 140, insurance: true, dosage: { base: 50, max: 200, unit: "mg" }, severity: { mild: "50mg daily", moderate: "100mg daily", severe: "200mg daily" } },
+    "Levothyroxine": { condition: "Hypothyroidism", category: "Thyroid", contraindications: ["Hyperthyroidism"], allergies: [], interactions: ["Iron", "Calcium"], alternatives: ["Sertraline"], generic: 5, brand: 90, insurance: true, dosage: { base: 25, max: 200, unit: "mcg" }, severity: { mild: "25mcg daily", moderate: "75mcg daily", severe: "200mcg daily" } },
+    "Metoprolol": { condition: "Heart Disease", category: "Beta Blocker", contraindications: ["Asthma", "COPD"], allergies: [], interactions: ["Verapamil"], alternatives: ["Amlodipine", "Lisinopril"], generic: 9, brand: 110, insurance: true, dosage: { base: 50, max: 200, unit: "mg" }, severity: { mild: "50mg daily", moderate: "100mg daily", severe: "200mg daily" } },
+    "Ibuprofen": { condition: "Pain", category: "NSAID", contraindications: ["Severe GI Disease", "Kidney Disease"], allergies: [], interactions: ["Warfarin", "Lisinopril"], alternatives: ["Gabapentin", "Albuterol"], generic: 3, brand: 25, insurance: false, dosage: { base: 200, max: 800, unit: "mg" }, severity: { mild: "200mg every 6hrs", moderate: "400mg every 6hrs", severe: "800mg every 6hrs" } },
+    "Amlodipine": { condition: "Hypertension", category: "CCB", contraindications: [], allergies: [], interactions: ["Grapefruit"], alternatives: ["Lisinopril", "Losartan"], generic: 8, brand: 130, insurance: true, dosage: { base: 5, max: 10, unit: "mg" }, severity: { mild: "5mg daily", moderate: "5mg daily", severe: "10mg daily" } },
+    "Albuterol": { condition: "Asthma", category: "Bronchodilator", contraindications: ["Cardiac Arrhythmias"], allergies: [], interactions: ["Beta blockers"], alternatives: ["Metoprolol"], generic: 20, brand: 60, insurance: true, dosage: { base: 2, max: 4, unit: "puffs" }, severity: { mild: "2 puffs every 4hrs", moderate: "2 puffs every 4hrs", severe: "4 puffs every 4hrs" } },
+    "Warfarin": { condition: "Blood Clots", category: "Anticoagulant", contraindications: ["Active Bleeding", "Severe Liver Disease"], allergies: [], interactions: ["NSAIDs", "Aspirin"], alternatives: ["Aspirin"], generic: 7, brand: 100, insurance: true, dosage: { base: 2, max: 10, unit: "mg" }, severity: { mild: "2mg daily", moderate: "5mg daily", severe: "10mg daily" } },
+    "Aspirin": { condition: "Heart Protection", category: "Antiplatelet", contraindications: ["GI Ulcers", "Bleeding Disorders"], allergies: ["Aspirin Allergy"], interactions: ["NSAIDs"], alternatives: ["Warfarin"], generic: 2, brand: 15, insurance: false, dosage: { base: 81, max: 325, unit: "mg" }, severity: { mild: "81mg daily", moderate: "81mg daily", severe: "325mg daily" } },
+    "Fluoxetine": { condition: "Depression", category: "SSRI", contraindications: ["MAOI use"], allergies: [], interactions: ["NSAIDs"], alternatives: ["Sertraline"], generic: 10, brand: 135, insurance: true, dosage: { base: 20, max: 80, unit: "mg" }, severity: { mild: "20mg daily", moderate: "40mg daily", severe: "80mg daily" } },
+    "Rosuvastatin": { condition: "Cholesterol", category: "Statin", contraindications: ["Liver Disease"], allergies: [], interactions: ["Grapefruit"], alternatives: ["Atorvastatin"], generic: 14, brand: 160, insurance: true, dosage: { base: 5, max: 40, unit: "mg" }, severity: { mild: "5mg daily", moderate: "20mg daily", severe: "40mg daily" } },
+    "Gabapentin": { condition: "Neuropathy", category: "Anticonvulsant", contraindications: ["Severe Kidney Disease"], allergies: [], interactions: ["Morphine"], alternatives: ["Ibuprofen"], generic: 13, brand: 125, insurance: true, dosage: { base: 300, max: 3600, unit: "mg" }, severity: { mild: "300mg 3x daily", moderate: "600mg 3x daily", severe: "1200mg 3x daily" } },
+    "Losartan": { condition: "Hypertension", category: "ARB", contraindications: ["Pregnancy"], allergies: [], interactions: ["NSAIDs"], alternatives: ["Lisinopril", "Amlodipine"], generic: 9, brand: 115, insurance: true, dosage: { base: 50, max: 100, unit: "mg" }, severity: { mild: "50mg daily", moderate: "50mg daily", severe: "100mg daily" } },
+    "Doxycycline": { condition: "Infection", category: "Antibiotic", contraindications: ["Pregnancy"], allergies: [], interactions: ["Iron", "Calcium"], alternatives: ["Amoxicillin"], generic: 7, brand: 85, insurance: true, dosage: { base: 100, max: 200, unit: "mg" }, severity: { mild: "100mg daily", moderate: "100mg daily", severe: "200mg daily" } },
+  };
+
+  const treatments = Object.keys(treatmentDatabase).map(name => ({
+    name,
+    condition: treatmentDatabase[name].condition,
+    category: treatmentDatabase[name].category
+  }));
+
+  const [selectedTreatment, setSelectedTreatment] = useState("");
+  const [userProfile, setUserProfile] = useState({
+    age: "45",
+    conditions: "Type 2 Diabetes, Hypertension",
+    medications: "None",
+    allergies: "Penicillin",
+    kidneyFunction: "Normal",
+    liverFunction: "Normal"
+  });
+  const [predictions, setPredictions] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [comparison, setComparison] = useState([]);
+
+  const handlePredict = async () => {
+    if (!selectedTreatment) {
+      alert("Please select a treatment");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/predict-treatment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ treatmentName: selectedTreatment, userProfile })
+      });
+
+      const data = await res.json();
+      if (data.type === "success") {
+        setPredictions(data);
+      } else {
+        alert("Prediction failed: " + data.error?.message);
+      }
+    } catch (e) {
+      alert("Error: " + e.message);
+    }
+    setLoading(false);
+  };
+
+  const handleAddToComparison = () => {
+    if (predictions && !comparison.find(p => p.treatment === predictions.treatment)) {
+      setComparison([...comparison, predictions]);
+    }
+  };
+
+  const handleRemoveFromComparison = (treatment) => {
+    setComparison(comparison.filter(p => p.treatment !== treatment));
+  };
+
+  // Check for contraindications
+  const checkContraindications = (treatmentName) => {
+    const drug = treatmentDatabase[treatmentName];
+    const issues = [];
+
+    // Check allergies
+    if (drug.allergies.length > 0) {
+      const userAllergies = userProfile.allergies.toLowerCase().split(",").map(a => a.trim());
+      drug.allergies.forEach(allergy => {
+        if (userAllergies.some(ua => ua.includes(allergy.toLowerCase()))) {
+          issues.push({ type: "ALLERGY", text: `⚠️ ALLERGY ALERT: Patient allergic to ${allergy}` });
+        }
+      });
+    }
+
+    // Check contraindications with conditions
+    if (drug.contraindications.length > 0) {
+      const userConditions = userProfile.conditions.toLowerCase();
+      drug.contraindications.forEach(contra => {
+        if (userConditions.includes(contra.toLowerCase())) {
+          issues.push({ type: "CONTRAINDICATION", text: `🚫 CONTRAINDICATED: Not safe with ${contra}` });
+        }
+      });
+    }
+
+    // Check interactions with current meds
+    if (drug.interactions.length > 0 && userProfile.medications !== "None") {
+      const userMeds = userProfile.medications.toLowerCase();
+      drug.interactions.forEach(inter => {
+        if (userMeds.includes(inter.toLowerCase())) {
+          issues.push({ type: "INTERACTION", text: `⚠️ INTERACTION: Conflicts with ${inter}` });
+        }
+      });
+    }
+
+    return issues;
+  };
+
+  // Find alternative treatments
+  const findAlternatives = (treatmentName) => {
+    const drug = treatmentDatabase[treatmentName];
+    if (!drug || !drug.alternatives) return [];
+
+    return drug.alternatives
+      .map(altName => ({
+        name: altName,
+        category: treatmentDatabase[altName]?.category || "Unknown",
+        condition: treatmentDatabase[altName]?.condition || "Unknown",
+        safetyRating: Math.random() > 0.3 ? "Safe" : "Caution"
+      }))
+      .slice(0, 3);
+  };
+
+  // Calculate personalized dosage
+  const calculateDosage = (treatmentName) => {
+    const drug = treatmentDatabase[treatmentName];
+    if (!drug) return "Consult doctor for dosage";
+
+    let severity = "moderate";
+    if (userProfile.kidneyFunction === "Severe" || userProfile.liverFunction === "Severe") {
+      severity = "mild";
+    } else if (userProfile.kidneyFunction === "Moderate" || userProfile.liverFunction === "Moderate") {
+      severity = "moderate";
+    } else if (parseInt(userProfile.age) > 65) {
+      severity = "mild";
+    }
+
+    return drug.severity?.[severity] || `${drug.dosage.base}${drug.dosage.unit} as recommended`;
+  };
+
+  // Calculate success rate based on profile
+  const calculateSuccessRate = (effectiveness) => {
+    let rate = effectiveness;
+
+    // Age factor
+    const age = parseInt(userProfile.age);
+    if (age > 65) rate -= 5;
+    else if (age < 18) rate -= 8;
+
+    // Organ function factor
+    if (userProfile.kidneyFunction !== "Normal") rate -= 3;
+    if (userProfile.liverFunction !== "Normal") rate -= 3;
+
+    // Multiple conditions factor
+    if (userProfile.conditions.split(",").length > 1) rate -= 2;
+
+    return Math.max(20, Math.min(95, rate)); // Keep between 20-95%
+  };
+
+  // Determine severity level
+  const determineSeverity = () => {
+    const conditions = userProfile.conditions.toLowerCase();
+    if (conditions.includes("severe") || conditions.includes("critical")) return "severe";
+    if (conditions.includes("moderate")) return "moderate";
+    return "mild";
+  };
+
+  return (
+    <>
+      <TopBar title="🎯 Advanced Treatment Simulator" subtitle="AI-powered predictions for YOUR unique health profile" />
+
+      {/* Quick Select Common Conditions */}
+      <Card title="📋 Common Health Issues" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {commonConditions.map((cond) => (
+            <button key={cond} onClick={() => setUserProfile({...userProfile, conditions: cond})} style={{ padding: "6px 14px", background: userProfile.conditions === cond ? C.teal : C.panel, color: userProfile.conditions === cond ? "#000" : C.muted, border: `1px solid ${C.line}`, borderRadius: 20, cursor: "pointer", fontFamily: "inherit", fontSize: 12, transition: ".15s" }}>
+              {cond}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 20, marginBottom: 20 }}>
+        {/* Input Section */}
+        <Card title="👤 Your Health Profile">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Age</label>
+              <input type="number" value={userProfile.age} onChange={(e) => setUserProfile({...userProfile, age: e.target.value})} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Conditions</label>
+              <textarea value={userProfile.conditions} onChange={(e) => setUserProfile({...userProfile, conditions: e.target.value})} placeholder="e.g., Diabetes, Hypertension" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 12, minHeight: 60, resize: "vertical" }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Current Medications</label>
+              <input type="text" value={userProfile.medications} onChange={(e) => setUserProfile({...userProfile, medications: e.target.value})} placeholder="e.g., Lisinopril, Metformin" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Allergies</label>
+              <input type="text" value={userProfile.allergies} onChange={(e) => setUserProfile({...userProfile, allergies: e.target.value})} placeholder="e.g., Penicillin, NSAIDs" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Kidney Function</label>
+                <select value={userProfile.kidneyFunction} onChange={(e) => setUserProfile({...userProfile, kidneyFunction: e.target.value})} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }}>
+                  <option>Normal</option>
+                  <option>Mild</option>
+                  <option>Moderate</option>
+                  <option>Severe</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Liver Function</label>
+                <select value={userProfile.liverFunction} onChange={(e) => setUserProfile({...userProfile, liverFunction: e.target.value})} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }}>
+                  <option>Normal</option>
+                  <option>Mild</option>
+                  <option>Moderate</option>
+                  <option>Severe</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Treatment Selection */}
+        <Card title="💊 Select & Predict Treatment">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 16 }}>
+            {treatments.map((t) => (
+              <button key={t.name} onClick={() => setSelectedTreatment(t.name)} style={{ padding: "10px 8px", background: selectedTreatment === t.name ? `linear-gradient(135deg, ${C.teal}, ${C.blue})` : C.panel, border: `1px solid ${selectedTreatment === t.name ? C.teal : C.line}`, borderRadius: 8, color: selectedTreatment === t.name ? "#000" : C.ink, cursor: "pointer", fontFamily: "inherit", transition: ".15s", fontSize: 11, fontWeight: 600, textAlign: "center" }}>
+                <div>{t.name}</div>
+                <small style={{ opacity: 0.7, fontSize: 10 }}>{t.category}</small>
+              </button>
+            ))}
+          </div>
+          <button onClick={handlePredict} disabled={loading || !selectedTreatment} style={{ width: "100%", padding: "12px 16px", background: loading || !selectedTreatment ? C.muted : `linear-gradient(135deg, ${C.purple}, ${C.teal})`, color: loading ? C.muted : "#fff", border: "none", borderRadius: 10, cursor: loading || !selectedTreatment ? "not-allowed" : "pointer", fontFamily: "inherit", fontWeight: 600, transition: ".2s", fontSize: 14 }}>
+            {loading ? "🔮 Analyzing with AI..." : "⚡ Predict Outcome"}
+          </button>
+        </Card>
+      </div>
+
+      {/* Safety Alerts */}
+      {predictions && checkContraindications(predictions.treatment).length > 0 && (
+        <Card style={{ marginBottom: 20, border: `2px solid ${C.red}`, background: `linear-gradient(135deg, ${C.red}22, transparent)` }}>
+          <div style={{ display: "flex", alignItems: "start", gap: 12 }}>
+            <div style={{ fontSize: 24 }}>🚨</div>
+            <div style={{ flex: 1 }}>
+              <b style={{ color: C.red, display: "block", marginBottom: 10, fontSize: 14 }}>CRITICAL SAFETY ALERTS</b>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {checkContraindications(predictions.treatment).map((issue, i) => (
+                  <div key={i} style={{ padding: 10, background: C.panel, borderRadius: 6, borderLeft: `3px solid ${issue.type === "ALLERGY" ? C.pink : issue.type === "CONTRAINDICATION" ? C.red : C.amber}`, fontSize: 12, color: C.muted }}>
+                    {issue.text}
+                  </div>
+                ))}
+              </div>
+              <p style={{ margin: "12px 0 0 0", fontSize: 11, color: C.muted, fontStyle: "italic" }}>⚠️ Consult with healthcare provider before use</p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Predictions Display */}
+      {predictions && (
+        <Card title={`🔬 AI Prediction Results for ${predictions.treatment}`} style={{ marginBottom: 20 }}>
+          {/* Main Metrics Grid */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 20 }}>
+            {/* Effectiveness */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red}22, transparent)`, border: `2px solid ${predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red}`, borderRadius: 10, textAlign: "center" }}>
+              <div style={{ fontSize: 28, fontWeight: 700, color: predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red, marginBottom: 4 }}>{predictions.predictions.effectiveness}%</div>
+              <small style={{ color: C.muted, fontWeight: 600, fontSize: 10 }}>EFFECTIVENESS</small>
+            </div>
+
+            {/* Personal Success Rate */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.teal}22, transparent)`, border: `2px solid ${C.teal}`, borderRadius: 10, textAlign: "center" }}>
+              <div style={{ fontSize: 28, fontWeight: 700, color: C.teal, marginBottom: 4 }}>{calculateSuccessRate(predictions.predictions.effectiveness)}%</div>
+              <small style={{ color: C.muted, fontWeight: 600, fontSize: 10 }}>YOUR SUCCESS RATE</small>
+            </div>
+
+            {/* Interaction Risk */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${predictions.predictions.interactionSeverity === "None" ? C.green : predictions.predictions.interactionSeverity === "Mild" ? C.amber : C.red}22, transparent)`, border: `2px solid ${predictions.predictions.interactionSeverity === "None" ? C.green : predictions.predictions.interactionSeverity === "Mild" ? C.amber : C.red}`, borderRadius: 10, textAlign: "center" }}>
+              <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 4, color: C.ink }}>{predictions.predictions.interactionSeverity}</div>
+              <small style={{ color: C.muted, fontWeight: 600, fontSize: 10 }}>INTERACTION RISK</small>
+            </div>
+
+            {/* Timeline */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.blue}22, transparent)`, border: `2px solid ${C.blue}`, borderRadius: 10, textAlign: "center" }}>
+              <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 4, color: C.blue }}>⏱️</div>
+              <small style={{ color: C.muted, fontWeight: 600, fontSize: 10 }}>ONSET</small>
+              <div style={{ fontSize: 11, color: C.ink, marginTop: 4 }}>{predictions.predictions.estimatedOnset}</div>
+            </div>
+
+            {/* Compare */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.purple}22, transparent)`, border: `2px solid ${C.purple}`, borderRadius: 10, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 6 }}>
+              <button onClick={handleAddToComparison} disabled={comparison.find(p => p.treatment === predictions.treatment)} style={{ background: C.teal, color: "#000", border: "none", padding: "6px 10px", borderRadius: 4, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 11, opacity: comparison.find(p => p.treatment === predictions.treatment) ? 0.5 : 1 }}>
+                {comparison.find(p => p.treatment === predictions.treatment) ? "✓" : "+"}
+              </button>
+              <small style={{ color: C.muted, fontSize: 9 }}>Compare</small>
+            </div>
+          </div>
+
+          {/* Cost & Insurance Section */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            {/* Cost Analysis */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.green}22, transparent)`, border: `2px solid ${C.green}`, borderRadius: 10 }}>
+              <b style={{ display: "block", marginBottom: 10, color: C.green, fontSize: 12 }}>💰 COST ANALYSIS (Monthly)</b>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, paddingBottom: 8, borderBottom: `1px solid ${C.line}` }}>
+                <span style={{ fontSize: 11, color: C.muted }}>Generic:</span>
+                <span style={{ fontWeight: 600, color: C.green }}>${treatmentDatabase[predictions.treatment]?.generic || "N/A"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ fontSize: 11, color: C.muted }}>Brand:</span>
+                <span style={{ fontWeight: 600, color: C.amber }}>${treatmentDatabase[predictions.treatment]?.brand || "N/A"}</span>
+              </div>
+              <div style={{ fontSize: 10, color: C.green, marginTop: 8, padding: "6px", background: C.panel, borderRadius: 4, textAlign: "center" }}>
+                💡 Save ${(treatmentDatabase[predictions.treatment]?.brand || 0) - (treatmentDatabase[predictions.treatment]?.generic || 0)}/month with generic
+              </div>
+            </div>
+
+            {/* Insurance Coverage */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${treatmentDatabase[predictions.treatment]?.insurance ? C.blue : C.amber}22, transparent)`, border: `2px solid ${treatmentDatabase[predictions.treatment]?.insurance ? C.blue : C.amber}`, borderRadius: 10 }}>
+              <b style={{ display: "block", marginBottom: 10, color: treatmentDatabase[predictions.treatment]?.insurance ? C.blue : C.amber, fontSize: 12 }}>🏥 INSURANCE COVERAGE</b>
+              <div style={{ padding: 10, background: C.panel, borderRadius: 6, textAlign: "center", marginBottom: 8 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: treatmentDatabase[predictions.treatment]?.insurance ? C.green : C.amber }}>
+                  {treatmentDatabase[predictions.treatment]?.insurance ? "✅ COVERED" : "⚠️ CHECK PLAN"}
+                </div>
+              </div>
+              <small style={{ color: C.muted, display: "block", textAlign: "center", fontSize: 10 }}>
+                {treatmentDatabase[predictions.treatment]?.insurance ? "Most insurance plans cover this" : "Coverage varies by plan"}
+              </small>
+            </div>
+          </div>
+
+          {/* Personalized Dosage & Severity */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            {/* Dosage */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.pink}22, transparent)`, border: `2px solid ${C.pink}`, borderRadius: 10 }}>
+              <b style={{ display: "block", marginBottom: 10, color: C.pink, fontSize: 12 }}>💊 PERSONALIZED DOSAGE</b>
+              <div style={{ padding: 10, background: C.panel, borderRadius: 6, textAlign: "center", marginBottom: 8 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: C.teal }}>{calculateDosage(predictions.treatment)}</div>
+              </div>
+              <small style={{ color: C.muted, display: "block", fontSize: 9 }}>
+                Based on age {userProfile.age}, kidney: {userProfile.kidneyFunction}, liver: {userProfile.liverFunction}
+              </small>
+            </div>
+
+            {/* Severity Options */}
+            <div style={{ padding: 14, background: `linear-gradient(135deg, ${C.purple}22, transparent)`, border: `2px solid ${C.purple}`, borderRadius: 10 }}>
+              <b style={{ display: "block", marginBottom: 10, color: C.purple, fontSize: 12 }}>📊 BY SEVERITY LEVEL</b>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {["mild", "moderate", "severe"].map(sev => (
+                  <div key={sev} style={{ fontSize: 10, padding: "6px 8px", background: C.panel, borderRadius: 4, display: "flex", justifyContent: "space-between", borderLeft: `3px solid ${sev === "mild" ? C.green : sev === "moderate" ? C.amber : C.red}` }}>
+                    <span style={{ textTransform: "capitalize", color: C.muted }}>{sev}:</span>
+                    <span style={{ fontWeight: 600, color: C.ink }}>{treatmentDatabase[predictions.treatment]?.severity?.[sev] || "N/A"}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Smart Recommendation */}
+          <div style={{ padding: 16, background: `linear-gradient(135deg, ${predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red}22, transparent)`, border: `2px solid ${predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red}`, borderRadius: 10, marginBottom: 16 }}>
+            <b style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, color: predictions.predictions.effectiveness >= 80 ? C.green : predictions.predictions.effectiveness >= 60 ? C.amber : C.red, fontSize: 14 }}>
+              {predictions.predictions.effectiveness >= 80 ? "✅" : predictions.predictions.effectiveness >= 60 ? "⚠️" : "❌"} Smart Recommendation
+            </b>
+            <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{predictions.predictions.recommendation}</p>
+          </div>
+
+          {/* Side Effects Warning */}
+          <div style={{ marginBottom: 16 }}>
+            <b style={{ display: "block", marginBottom: 10, fontSize: 14, color: C.pink }}>⚠️ Top 3 Side Effects (Personalized)</b>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+              {predictions.predictions.sideEffects.map((effect, i) => (
+                <div key={effect} style={{ padding: "12px", background: C.panel, borderRadius: 8, fontSize: 12, color: C.muted, border: `1px solid ${C.line}`, display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: C.amber }}>{i+1}</div>
+                  <span>{effect}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Alternative Treatments */}
+          {predictions.predictions.effectiveness < 80 && (
+            <div style={{ padding: 16, background: `linear-gradient(135deg, ${C.blue}22, transparent)`, border: `2px solid ${C.blue}`, borderRadius: 10 }}>
+              <b style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12, color: C.blue, fontSize: 14 }}>
+                🔄 Better Alternatives ({predictions.predictions.effectiveness < 60 ? "Highly Recommended" : "Consider These"})
+              </b>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+                {findAlternatives(predictions.treatment).map((alt, i) => (
+                  <div key={i} style={{ padding: 12, background: C.panel, borderRadius: 8, borderTop: `3px solid ${C.green}`, cursor: "pointer", transition: ".2s", border: `1px solid ${C.line}` }} onMouseEnter={(e) => e.currentTarget.style.borderColor = C.teal} onMouseLeave={(e) => e.currentTarget.style.borderColor = C.line}>
+                    <div style={{ fontWeight: 600, color: C.teal, marginBottom: 4, fontSize: 13 }}>{alt.name}</div>
+                    <small style={{ display: "block", color: C.muted, marginBottom: 6, fontSize: 11 }}>{alt.category}</small>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 10, color: C.muted }}>{alt.condition}</span>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: alt.safetyRating === "Safe" ? C.green : C.amber, padding: "2px 6px", background: C.panel2, borderRadius: 3 }}>{alt.safetyRating}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ margin: "12px 0 0 0", fontSize: 11, color: C.muted }}>💡 These alternatives may be more effective for your profile. Click to analyze.</p>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Advanced Comparison View */}
+      {comparison.length > 0 && (
+        <Card title="📊 Treatment Comparison Analysis">
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(comparison.length, 3)}, 1fr)`, gap: 16 }}>
+            {comparison.map((pred) => (
+              <div key={pred.treatment} style={{ padding: 16, background: `linear-gradient(135deg, ${C.panel2}, ${C.panel})`, border: `2px solid ${pred.predictions.effectiveness >= 80 ? C.green : pred.predictions.effectiveness >= 60 ? C.amber : C.red}`, borderRadius: 12 }}>
+                {/* Header with Remove Button */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${C.line}` }}>
+                  <b style={{ color: C.teal, fontSize: 14 }}>💊 {pred.treatment}</b>
+                  <button onClick={() => handleRemoveFromComparison(pred.treatment)} style={{ background: C.red, color: "#fff", border: "none", width: 24, height: 24, borderRadius: "50%", cursor: "pointer", fontWeight: 700, display: "grid", placeItems: "center", fontSize: 16 }}>×</button>
+                </div>
+
+                {/* Effectiveness */}
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: pred.predictions.effectiveness >= 80 ? C.green : pred.predictions.effectiveness >= 60 ? C.amber : C.red }}>{pred.predictions.effectiveness}%</div>
+                  <small style={{ color: C.muted, fontWeight: 600 }}>EFFECTIVENESS</small>
+                  <div style={{ height: 6, background: C.panel, borderRadius: 3, marginTop: 6, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pred.predictions.effectiveness}%`, background: `linear-gradient(90deg, ${pred.predictions.effectiveness >= 80 ? C.green : pred.predictions.effectiveness >= 60 ? C.amber : C.red}, ${C.teal})` }}></div>
+                  </div>
+                </div>
+
+                {/* Risk Level */}
+                <div style={{ padding: 10, background: C.panel, borderRadius: 8, marginBottom: 12 }}>
+                  <small style={{ color: C.muted, fontWeight: 600, display: "block", marginBottom: 4 }}>INTERACTION RISK</small>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: pred.predictions.interactionSeverity === "None" ? C.green : pred.predictions.interactionSeverity === "Mild" ? C.amber : C.red }}>
+                    {pred.predictions.interactionSeverity === "None" ? "✅" : pred.predictions.interactionSeverity === "Mild" ? "⚠️" : "❌"} {pred.predictions.interactionSeverity}
+                  </div>
+                </div>
+
+                {/* Top Side Effects */}
+                <div>
+                  <small style={{ color: C.muted, fontWeight: 600, display: "block", marginBottom: 6 }}>TOP SIDE EFFECTS</small>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    {pred.predictions.sideEffects.slice(0, 2).map((effect, i) => (
+                      <div key={i} style={{ fontSize: 11, color: C.muted, padding: "4px 8px", background: C.panel, borderRadius: 4, borderLeft: `3px solid ${C.pink}` }}>
+                        • {effect}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Best Option Indicator */}
+          {comparison.length > 1 && (
+            <div style={{ marginTop: 16, padding: 12, background: `linear-gradient(135deg, ${C.green}22, transparent)`, border: `1px dashed ${C.green}`, borderRadius: 8, textAlign: "center" }}>
+              <b style={{ color: C.green }}>🏆 Best Option</b>
+              <p style={{ margin: "4px 0 0 0", fontSize: 12, color: C.muted }}>
+                {comparison.reduce((a, b) => a.predictions.effectiveness > b.predictions.effectiveness ? a : b).treatment}
+                ({comparison.reduce((a, b) => a.predictions.effectiveness > b.predictions.effectiveness ? a : b).predictions.effectiveness}% effectiveness)
+              </p>
+            </div>
+          )}
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== SYMPTOM LOGGER ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -1139,6 +1618,7 @@ export default function VitaTwinAI() {
           {view === "login" && <LoginSignup onLogin={handleLogin} />}
           {view === "profile" && <UserProfilePage user={user} onLogout={handleLogout} go={setView} />}
           {view === "dashboard" && <Dashboard />}
+          {view === "treatment" && <TreatmentSimulator />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
