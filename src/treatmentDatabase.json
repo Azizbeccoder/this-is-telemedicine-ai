@@ -1,0 +1,46 @@
+{
+  "treatments": [
+    {
+      "id": "metformin",
+      "name": "Metformin",
+      "type": "Diabetes",
+      "category": "Oral Antidiabetic",
+      "dosage": "500-2000mg daily",
+      "baseEffectiveness": 85,
+      "description": "First-line diabetes medication that reduces blood glucose",
+      "sideEffects": ["GI upset", "Nausea", "Diarrhea", "Metallic taste", "B12 deficiency"],
+      "interactions": ["Alcohol (increased lactic acidosis risk)", "Contrast dye", "NSAIDs"],
+      "contraindications": ["Severe kidney disease", "Diabetic ketoacidosis", "Heart failure"],
+      "benefits": ["Weight neutral", "Low hypoglycemia risk", "Cardiovascular protection"],
+      "timeline": "2-4 weeks for full effect"
+    },
+    {
+      "id": "lisinopril",
+      "name": "Lisinopril",
+      "type": "Hypertension",
+      "category": "ACE Inhibitor",
+      "dosage": "10-40mg daily",
+      "baseEffectiveness": 82,
+      "description": "Blood pressure control with kidney protection",
+      "sideEffects": ["Dry cough", "Dizziness", "Fatigue", "Hyperkalemia", "Headache"],
+      "interactions": ["NSAIDs", "Potassium supplements", "Other antihypertensives"],
+      "contraindications": ["Pregnancy", "Severe kidney disease", "Angioedema history"],
+      "benefits": ["Kidney protection in diabetes", "Heart failure benefit", "Stroke reduction"],
+      "timeline": "2-4 weeks for full effect"
+    },
+    {
+      "id": "atorvastatin",
+      "name": "Atorvastatin",
+      "type": "High Cholesterol",
+      "category": "Statin",
+      "dosage": "20-80mg daily",
+      "baseEffectiveness": 88,
+      "description": "Lowers LDL cholesterol and reduces heart attack risk",
+      "sideEffects": ["Muscle pain", "Headache", "Fatigue", "Liver enzyme elevation", "Memory issues"],
+      "interactions": ["Grapefruit juice", "Erythromycin", "Warfarin", "Gemfibrozil"],
+      "contraindications": ["Liver disease", "Pregnancy", "Muscle disease history"],
+      "benefits": ["Reduces cardiovascular events", "Anti-inflammatory effects", "Bone protection"],
+      "timeline": "4-6 weeks for full effect"
+    }
+  ]
+}
