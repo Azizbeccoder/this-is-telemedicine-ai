@@ -41,6 +41,48 @@
       "contraindications": ["Liver disease", "Pregnancy", "Muscle disease history"],
       "benefits": ["Reduces cardiovascular events", "Anti-inflammatory effects", "Bone protection"],
       "timeline": "4-6 weeks for full effect"
+    },
+    {
+      "id": "amoxicillin",
+      "name": "Amoxicillin",
+      "type": "Bacterial Infection",
+      "category": "Penicillin Antibiotic",
+      "dosage": "250-500mg 3x daily",
+      "baseEffectiveness": 90,
+      "description": "Broad-spectrum antibiotic for bacterial infections",
+      "sideEffects": ["Nausea", "Diarrhea", "Rash", "Yeast infection", "Allergic reaction"],
+      "interactions": ["Oral contraceptives", "Methotrexate", "Warfarin"],
+      "contraindications": ["Penicillin allergy", "Mononucleosis", "Severe diarrhea"],
+      "benefits": ["Effective against common bacteria", "Safe in pregnancy", "Oral administration"],
+      "timeline": "24-48 hours for improvement"
+    },
+    {
+      "id": "omeprazole",
+      "name": "Omeprazole",
+      "type": "GERD",
+      "category": "Proton Pump Inhibitor",
+      "dosage": "20-40mg daily",
+      "baseEffectiveness": 87,
+      "description": "Reduces stomach acid production",
+      "sideEffects": ["Headache", "Diarrhea", "Nausea", "B12 deficiency", "Bone fracture risk"],
+      "interactions": ["Clopidogrel", "Methotrexate", "Iron supplements"],
+      "contraindications": ["Severe hypersensitivity", "Long-term use >1 year"],
+      "benefits": ["Rapid symptom relief", "Healing of ulcers", "Long-lasting effect"],
+      "timeline": "1-2 weeks for full relief"
+    },
+    {
+      "id": "sertraline",
+      "name": "Sertraline",
+      "type": "Depression",
+      "category": "SSRI Antidepressant",
+      "dosage": "50-200mg daily",
+      "baseEffectiveness": 75,
+      "description": "Selective serotonin reuptake inhibitor for depression and anxiety",
+      "sideEffects": ["Sexual dysfunction", "Nausea", "Sleep issues", "Tremor", "Weight gain"],
+      "interactions": ["MAOIs", "NSAIDs", "Warfarin", "Other serotonergic drugs"],
+      "contraindications": ["MAOI use within 14 days", "Uncontrolled angle-closure glaucoma"],
+      "benefits": ["Multiple anxiety disorders", "OCD efficacy", "PTSD treatment", "Low interaction"],
+      "timeline": "4-6 weeks for full effect"
     }
   ]
 }
