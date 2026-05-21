@@ -83,6 +83,48 @@
       "contraindications": ["MAOI use within 14 days", "Uncontrolled angle-closure glaucoma"],
       "benefits": ["Multiple anxiety disorders", "OCD efficacy", "PTSD treatment", "Low interaction"],
       "timeline": "4-6 weeks for full effect"
+    },
+    {
+      "id": "levothyroxine",
+      "name": "Levothyroxine",
+      "type": "Hypothyroidism",
+      "category": "Thyroid Hormone",
+      "dosage": "25-200mcg daily",
+      "baseEffectiveness": 92,
+      "description": "Replaces thyroid hormone in hypothyroidism",
+      "sideEffects": ["Palpitations", "Anxiety", "Tremor", "Insomnia", "Hair loss (if overdosed)"],
+      "interactions": ["Calcium", "Iron", "Soy", "Certain antibiotics"],
+      "contraindications": ["Untreated hyperthyroidism", "Acute MI"],
+      "benefits": ["Improves energy and metabolism", "Safe long-term", "Once daily dosing"],
+      "timeline": "6-8 weeks for steady state"
+    },
+    {
+      "id": "metoprolol",
+      "name": "Metoprolol",
+      "type": "Hypertension/Heart Disease",
+      "category": "Beta Blocker",
+      "dosage": "50-200mg daily",
+      "baseEffectiveness": 80,
+      "description": "Slows heart rate and reduces blood pressure",
+      "sideEffects": ["Fatigue", "Cold extremities", "Erectile dysfunction", "Bradycardia", "Depression"],
+      "interactions": ["Verapamil", "NSAIDs", "Clonidine"],
+      "contraindications": ["Asthma/COPD", "Heart block", "Bradycardia", "Decompensated heart failure"],
+      "benefits": ["Heart attack prevention", "Migraine prevention", "Tremor reduction"],
+      "timeline": "1-2 weeks for full effect"
+    },
+    {
+      "id": "ibuprofen",
+      "name": "Ibuprofen",
+      "type": "Pain/Inflammation",
+      "category": "NSAID",
+      "dosage": "200-800mg every 4-6 hours",
+      "baseEffectiveness": 78,
+      "description": "Reduces pain, fever, and inflammation",
+      "sideEffects": ["GI upset", "Ulcers", "Kidney issues", "Hypertension", "Cardiovascular risk"],
+      "interactions": ["Aspirin", "Warfarin", "ACE inhibitors", "Lithium"],
+      "contraindications": ["Severe GI disease", "Kidney disease", "Heart disease", "Pregnancy (3rd trimester)"],
+      "benefits": ["Fast-acting", "OTC availability", "Multiple formulations"],
+      "timeline": "30 minutes to 1 hour"
     }
   ]
 }
