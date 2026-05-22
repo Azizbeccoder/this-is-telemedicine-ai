@@ -125,6 +125,48 @@
       "contraindications": ["Severe GI disease", "Kidney disease", "Heart disease", "Pregnancy (3rd trimester)"],
       "benefits": ["Fast-acting", "OTC availability", "Multiple formulations"],
       "timeline": "30 minutes to 1 hour"
+    },
+    {
+      "id": "amlodipine",
+      "name": "Amlodipine",
+      "type": "Hypertension/Angina",
+      "category": "Calcium Channel Blocker",
+      "dosage": "2.5-10mg daily",
+      "baseEffectiveness": 84,
+      "description": "Relaxes blood vessels and improves blood flow",
+      "sideEffects": ["Ankle swelling", "Headache", "Flushing", "Fatigue", "Dizziness"],
+      "interactions": ["Grapefruit juice", "Simvastatin", "Cyclosporine"],
+      "contraindications": ["Cardiogenic shock", "Severe aortic stenosis"],
+      "benefits": ["Long-acting", "Low side effect profile", "Cardioprotective"],
+      "timeline": "2-4 weeks for full effect"
+    },
+    {
+      "id": "albuterol",
+      "name": "Albuterol",
+      "type": "Asthma/COPD",
+      "category": "Beta-2 Agonist",
+      "dosage": "2-4 puffs every 4-6 hours",
+      "baseEffectiveness": 89,
+      "description": "Quick relief of airway constriction",
+      "sideEffects": ["Tremor", "Tachycardia", "Nervousness", "Headache", "Palpitations"],
+      "interactions": ["Beta blockers", "Tricyclic antidepressants"],
+      "contraindications": ["Cardiac arrhythmias", "Hypersensitivity"],
+      "benefits": ["Rapid onset (minutes)", "Well-tolerated", "Multiple delivery forms"],
+      "timeline": "5-15 minutes"
+    },
+    {
+      "id": "methotrexate",
+      "name": "Methotrexate",
+      "type": "Rheumatoid Arthritis",
+      "category": "DMARD",
+      "dosage": "7.5-25mg weekly",
+      "baseEffectiveness": 86,
+      "description": "Suppresses immune system to reduce inflammation",
+      "sideEffects": ["Nausea", "Mouth sores", "Hair loss", "Liver damage", "Bone marrow suppression"],
+      "interactions": ["NSAIDs", "Trimethoprim", "Probenecid", "Alcohol"],
+      "contraindications": ["Pregnancy", "Liver disease", "Kidney disease", "Active infection"],
+      "benefits": ["Remission induction", "Disease-modifying", "Cost-effective"],
+      "timeline": "6-12 weeks for full effect"
     }
   ]
 }
