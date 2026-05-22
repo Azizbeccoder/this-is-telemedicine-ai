@@ -167,6 +167,62 @@
       "contraindications": ["Pregnancy", "Liver disease", "Kidney disease", "Active infection"],
       "benefits": ["Remission induction", "Disease-modifying", "Cost-effective"],
       "timeline": "6-12 weeks for full effect"
+    },
+    {
+      "id": "fluoxetine",
+      "name": "Fluoxetine",
+      "type": "Depression",
+      "category": "SSRI Antidepressant",
+      "dosage": "20-80mg daily",
+      "baseEffectiveness": 76,
+      "description": "SSRI for depression, OCD, panic disorder",
+      "sideEffects": ["Sexual dysfunction", "Weight gain", "Insomnia", "Nausea", "Tremor"],
+      "interactions": ["MAOIs", "NSAIDs", "Warfarin", "Linezolid"],
+      "contraindications": ["MAOI use", "Uncontrolled angle-closure glaucoma"],
+      "benefits": ["Effective for multiple conditions", "Long half-life", "Once daily dosing"],
+      "timeline": "4-6 weeks for full effect"
+    },
+    {
+      "id": "hydrochlorothiazide",
+      "name": "Hydrochlorothiazide",
+      "type": "Hypertension",
+      "category": "Thiazide Diuretic",
+      "dosage": "12.5-50mg daily",
+      "baseEffectiveness": 79,
+      "description": "Reduces fluid volume and blood pressure",
+      "sideEffects": ["Hypokalemia", "Hyperglycemia", "Gout", "Erectile dysfunction", "Hyponatremia"],
+      "interactions": ["Lithium", "NSAIDs", "Potassium-sparing diuretics"],
+      "contraindications": ["Severe kidney disease", "Sulfonamide allergy"],
+      "benefits": ["Low cost", "Good long-term data", "Prevents stroke"],
+      "timeline": "2-4 weeks for full effect"
+    },
+    {
+      "id": "aspirin",
+      "name": "Aspirin",
+      "type": "Cardiovascular Protection",
+      "category": "Antiplatelet",
+      "dosage": "81-325mg daily",
+      "baseEffectiveness": 81,
+      "description": "Antiplatelet agent for heart attack/stroke prevention",
+      "sideEffects": ["GI bleeding", "Ulcers", "Allergy", "Tinnitus", "Easy bruising"],
+      "interactions": ["NSAIDs", "Warfarin", "Ibuprofen"],
+      "contraindications": ["GI ulcers", "Bleeding disorders", "Aspirin allergy"],
+      "benefits": ["Cardiovascular protection", "Low cost", "OTC availability"],
+      "timeline": "Minutes for antiplatelet effect"
+    },
+    {
+      "id": "gabapentin",
+      "name": "Gabapentin",
+      "type": "Neuropathic Pain",
+      "category": "Anticonvulsant",
+      "dosage": "300-3600mg daily (divided)",
+      "baseEffectiveness": 77,
+      "description": "Reduces nerve pain and neuropathy",
+      "sideEffects": ["Dizziness", "Fatigue", "Swelling", "Weight gain", "Coordination issues"],
+      "interactions": ["Morphine", "Hydrocodone", "Naproxen"],
+      "contraindications": ["Severe kidney disease"],
+      "benefits": ["Effective for neuropathic pain", "No drug interactions", "Discontinuation possible"],
+      "timeline": "1-2 weeks for noticeable effect"
     }
   ]
 }
