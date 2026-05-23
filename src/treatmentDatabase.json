@@ -223,6 +223,62 @@
       "contraindications": ["Severe kidney disease"],
       "benefits": ["Effective for neuropathic pain", "No drug interactions", "Discontinuation possible"],
       "timeline": "1-2 weeks for noticeable effect"
+    },
+    {
+      "id": "warfarin",
+      "name": "Warfarin",
+      "type": "Blood Clotting",
+      "category": "Anticoagulant",
+      "dosage": "2-10mg daily",
+      "baseEffectiveness": 88,
+      "description": "Prevents blood clots in atrial fibrillation/thrombosis",
+      "sideEffects": ["Bleeding", "Necrosis", "Hair loss", "GI upset", "Rash"],
+      "interactions": ["NSAIDs", "Aspirin", "Antibiotics", "Many others - high interaction risk"],
+      "contraindications": ["Active bleeding", "Severe liver disease", "Pregnancy"],
+      "benefits": ["Proven long-term efficacy", "Reversible", "Inexpensive"],
+      "timeline": "2-7 days (requires INR monitoring)"
+    },
+    {
+      "id": "loratadine",
+      "name": "Loratadine",
+      "type": "Allergies",
+      "category": "Antihistamine",
+      "dosage": "10mg daily",
+      "baseEffectiveness": 80,
+      "description": "Non-drowsy antihistamine for allergies",
+      "sideEffects": ["Headache", "Dry mouth", "Drowsiness (rare)", "Tachycardia"],
+      "interactions": ["Ketoconazole", "Erythromycin", "CYP3A4 inhibitors"],
+      "contraindications": ["Severe liver disease"],
+      "benefits": ["Non-drowsy", "Long-acting", "OTC availability", "Once daily"],
+      "timeline": "1-2 hours"
+    },
+    {
+      "id": "ranitidine",
+      "name": "Ranitidine",
+      "type": "GERD/Ulcers",
+      "category": "H2 Blocker",
+      "dosage": "150-300mg daily",
+      "baseEffectiveness": 75,
+      "description": "Reduces stomach acid production",
+      "sideEffects": ["Headache", "Diarrhea", "Dizziness", "Constipation", "Mental confusion (rare)"],
+      "interactions": ["Atazanavir", "Ketoconazole", "Clopidogrel"],
+      "contraindications": ["Porphyria", "Severe liver/kidney disease"],
+      "benefits": ["Fast relief", "Over-the-counter", "Few interactions"],
+      "timeline": "30 minutes to 1 hour"
+    },
+    {
+      "id": "prednisolone",
+      "name": "Prednisolone",
+      "type": "Inflammation/Autoimmune",
+      "category": "Corticosteroid",
+      "dosage": "5-60mg daily",
+      "baseEffectiveness": 89,
+      "description": "Potent anti-inflammatory and immunosuppressant",
+      "sideEffects": ["Weight gain", "Insomnia", "Mood changes", "Osteoporosis", "Infection risk", "Hyperglycemia"],
+      "interactions": ["NSAIDs", "Anticonvulsants", "Rifampicin"],
+      "contraindications": ["Active infection", "Live vaccines", "Severe osteoporosis"],
+      "benefits": ["Rapid anti-inflammatory effect", "Multiple routes of administration"],
+      "timeline": "Hours to days"
     }
   ]
 }
