@@ -1298,6 +1298,106 @@ function TreatmentSimulator() {
 }
 
 // ==================== SYMPTOM LOGGER ====================
+function SymptomTracker() {
+  const [symptoms, setSymptoms] = useState(() => {
+    const saved = localStorage.getItem("symptoms");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [symptomName, setSymptomName] = useState("");
+  const [severity, setSeverity] = useState("moderate");
+  const [notes, setNotes] = useState("");
+
+  const addSymptom = () => {
+    if (!symptomName) {
+      alert("Please enter a symptom");
+      return;
+    }
+
+    const newSymptom = {
+      id: Date.now(),
+      name: symptomName,
+      severity,
+      notes,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    const updated = [...symptoms, newSymptom];
+    setSymptoms(updated);
+    localStorage.setItem("symptoms", JSON.stringify(updated));
+
+    setSymptomName("");
+    setSeverity("moderate");
+    setNotes("");
+  };
+
+  const deleteSymptom = (id) => {
+    const updated = symptoms.filter((s) => s.id !== id);
+    setSymptoms(updated);
+    localStorage.setItem("symptoms", JSON.stringify(updated));
+  };
+
+  const getSeverityColor = (sev) => {
+    if (sev === "mild") return C.green;
+    if (sev === "moderate") return C.amber;
+    return C.red;
+  };
+
+  return (
+    <>
+      <TopBar title="🩺 Symptom Tracker" subtitle="Log symptoms to identify patterns" />
+
+      <Card title="➕ Log New Symptom" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr 1fr", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>SYMPTOM</label>
+            <input type="text" value={symptomName} onChange={(e) => setSymptomName(e.target.value)} placeholder="e.g., Headache, Nausea" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>SEVERITY</label>
+            <select value={severity} onChange={(e) => setSeverity(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }}>
+              <option value="mild">Mild</option>
+              <option value="moderate">Moderate</option>
+              <option value="severe">Severe</option>
+            </select>
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>NOTES</label>
+            <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Additional details..." style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            <button onClick={addSymptom} style={{ width: "100%", padding: "8px 12px", background: `linear-gradient(135deg, ${C.teal}, ${C.blue})`, color: "#000", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+              ➕ Log
+            </button>
+          </div>
+        </div>
+      </Card>
+
+      {symptoms.length > 0 && (
+        <Card title={`📋 Your Symptoms (${symptoms.length})`}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+            {symptoms.slice().reverse().map((sym) => (
+              <div key={sym.id} style={{ padding: 14, background: `linear-gradient(135deg, ${getSeverityColor(sym.severity)}22, transparent)`, border: `2px solid ${getSeverityColor(sym.severity)}`, borderRadius: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                  <b style={{ color: C.ink }}>{sym.name}</b>
+                  <button onClick={() => deleteSymptom(sym.id)} style={{ background: C.red, color: "#fff", border: "none", width: 20, height: 20, borderRadius: "50%", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>×</button>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 11 }}>
+                  <span style={{ color: C.muted }}>{sym.date} at {sym.time}</span>
+                  <span style={{ padding: "2px 8px", background: getSeverityColor(sym.severity) + "44", color: getSeverityColor(sym.severity), borderRadius: 3, fontWeight: 600, textTransform: "capitalize" }}>{sym.severity}</span>
+                </div>
+                {sym.notes && <p style={{ margin: 0, fontSize: 12, color: C.muted }}>{sym.notes}</p>}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== SIDE EFFECT TRACKER ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -1619,6 +1719,7 @@ export default function VitaTwinAI() {
           {view === "profile" && <UserProfilePage user={user} onLogout={handleLogout} go={setView} />}
           {view === "dashboard" && <Dashboard />}
           {view === "treatment" && <TreatmentSimulator />}
+          {view === "symptoms" && <SymptomTracker />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
