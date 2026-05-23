@@ -279,6 +279,62 @@
       "contraindications": ["Active infection", "Live vaccines", "Severe osteoporosis"],
       "benefits": ["Rapid anti-inflammatory effect", "Multiple routes of administration"],
       "timeline": "Hours to days"
+    },
+    {
+      "id": "donepezil",
+      "name": "Donepezil",
+      "type": "Alzheimer's Disease",
+      "category": "Cholinesterase Inhibitor",
+      "dosage": "5-10mg nightly",
+      "baseEffectiveness": 65,
+      "description": "Slows cognitive decline in Alzheimer's disease",
+      "sideEffects": ["Nausea", "Diarrhea", "Muscle cramps", "Insomnia", "Syncope"],
+      "interactions": ["NSAIDs", "Succinylcholine", "Beta blockers"],
+      "contraindications": ["Sick sinus syndrome", "AV block"],
+      "benefits": ["May slow progression", "Once daily dosing", "Oral administration"],
+      "timeline": "6-12 weeks for measurable effect"
+    },
+    {
+      "id": "sildenafil",
+      "name": "Sildenafil",
+      "type": "Erectile Dysfunction",
+      "category": "PDE5 Inhibitor",
+      "dosage": "25-100mg as needed",
+      "baseEffectiveness": 84,
+      "description": "Improves blood flow for erectile function",
+      "sideEffects": ["Headache", "Flushing", "Indigestion", "Vision changes", "Nasal congestion"],
+      "interactions": ["Nitrates (dangerous)", "Alpha blockers", "Ritonavir"],
+      "contraindications": ["Nitrate use", "Severe heart disease", "Hypotension"],
+      "benefits": ["High efficacy", "Rapid onset (30-60 min)", "Well-tolerated"],
+      "timeline": "30-60 minutes"
+    },
+    {
+      "id": "ciprofloxacin",
+      "name": "Ciprofloxacin",
+      "type": "Bacterial Infection",
+      "category": "Fluoroquinolone",
+      "dosage": "500-750mg twice daily",
+      "baseEffectiveness": 87,
+      "description": "Broad-spectrum antibiotic for serious infections",
+      "sideEffects": ["Tendon rupture", "Nausea", "Headache", "Photosensitivity", "QT prolongation"],
+      "interactions": ["Theophylline", "Warfarin", "NSAIDs", "Tizanidine"],
+      "contraindications": ["Tendon disorders", "Myasthenia gravis", "QT prolongation"],
+      "benefits": ["Excellent lung penetration", "Oral and IV available", "Broad spectrum"],
+      "timeline": "24-48 hours for improvement"
+    },
+    {
+      "id": "rosuvastatin",
+      "name": "Rosuvastatin",
+      "type": "High Cholesterol",
+      "category": "Statin",
+      "dosage": "5-40mg daily",
+      "baseEffectiveness": 89,
+      "description": "Potent statin for LDL cholesterol reduction",
+      "sideEffects": ["Muscle pain", "Liver enzyme elevation", "Memory issues", "Headache"],
+      "interactions": ["Grapefruit juice", "Gemfibrozil", "Cyclosporine"],
+      "contraindications": ["Liver disease", "Pregnancy", "Muscle disorders"],
+      "benefits": ["Very potent", "Reduces cardiovascular events", "Once daily"],
+      "timeline": "4-6 weeks for full effect"
     }
   ]
 }
