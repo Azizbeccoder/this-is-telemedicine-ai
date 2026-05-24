@@ -1398,6 +1398,110 @@ function SymptomTracker() {
 }
 
 // ==================== SIDE EFFECT TRACKER ====================
+function SideEffectTracker() {
+  const [effects, setEffects] = useState(() => {
+    const saved = localStorage.getItem("sideEffects");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [medication, setMedication] = useState("");
+  const [effect, setEffect] = useState("");
+  const [intensity, setIntensity] = useState("moderate");
+
+  const addEffect = () => {
+    if (!medication || !effect) {
+      alert("Fill in medication and effect");
+      return;
+    }
+
+    const newEffect = {
+      id: Date.now(),
+      medication,
+      effect,
+      intensity,
+      date: new Date().toLocaleDateString(),
+      status: "ongoing",
+    };
+
+    const updated = [...effects, newEffect];
+    setEffects(updated);
+    localStorage.setItem("sideEffects", JSON.stringify(updated));
+
+    setMedication("");
+    setEffect("");
+    setIntensity("moderate");
+  };
+
+  const toggleResolved = (id) => {
+    const updated = effects.map((e) =>
+      e.id === id ? { ...e, status: e.status === "ongoing" ? "resolved" : "ongoing" } : e
+    );
+    setEffects(updated);
+    localStorage.setItem("sideEffects", JSON.stringify(updated));
+  };
+
+  const deleteEffect = (id) => {
+    const updated = effects.filter((e) => e.id !== id);
+    setEffects(updated);
+    localStorage.setItem("sideEffects", JSON.stringify(updated));
+  };
+
+  return (
+    <>
+      <TopBar title="⚠️ Side Effects Logger" subtitle="Track reactions to medications" />
+
+      <Card title="📝 Log Side Effect" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>MEDICATION</label>
+            <input type="text" value={medication} onChange={(e) => setMedication(e.target.value)} placeholder="Drug name" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>SIDE EFFECT</label>
+            <input type="text" value={effect} onChange={(e) => setEffect(e.target.value)} placeholder="e.g., Headache, Nausea" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>INTENSITY</label>
+            <select value={intensity} onChange={(e) => setIntensity(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }}>
+              <option value="mild">Mild</option>
+              <option value="moderate">Moderate</option>
+              <option value="severe">Severe</option>
+            </select>
+          </div>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            <button onClick={addEffect} style={{ width: "100%", padding: "8px 12px", background: `linear-gradient(135deg, ${C.red}, ${C.amber})`, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+              ➕ Log Effect
+            </button>
+          </div>
+        </div>
+      </Card>
+
+      {effects.length > 0 && (
+        <Card title={`📊 Logged Effects (${effects.length})`}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {effects.slice().reverse().map((e) => (
+              <div key={e.id} style={{ padding: 12, background: e.status === "resolved" ? `${C.green}22` : `${C.red}22`, border: `2px solid ${e.status === "resolved" ? C.green : C.red}`, borderRadius: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <b style={{ color: C.ink }}>{e.medication}</b>
+                  <button onClick={() => deleteEffect(e.id)} style={{ background: C.red, color: "#fff", border: "none", width: 18, height: 18, borderRadius: "50%", cursor: "pointer", fontSize: 11, fontWeight: 700 }}>×</button>
+                </div>
+                <small style={{ display: "block", color: C.muted, marginBottom: 8 }}>{e.effect} • {e.date}</small>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <span style={{ fontSize: 10, padding: "3px 8px", background: C.panel, borderRadius: 4, color: C.muted, textTransform: "capitalize" }}>{e.intensity}</span>
+                  <button onClick={() => toggleResolved(e.id)} style={{ flex: 1, fontSize: 10, padding: "3px 8px", background: e.status === "resolved" ? C.green : C.amber, color: "#fff", border: "none", borderRadius: 4, cursor: "pointer", fontWeight: 600 }}>
+                    {e.status === "resolved" ? "✅ Resolved" : "🔄 Ongoing"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== DRUG INTERACTION CHECKER ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -1720,6 +1824,7 @@ export default function VitaTwinAI() {
           {view === "dashboard" && <Dashboard />}
           {view === "treatment" && <TreatmentSimulator />}
           {view === "symptoms" && <SymptomTracker />}
+          {view === "sideeffects" && <SideEffectTracker />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
