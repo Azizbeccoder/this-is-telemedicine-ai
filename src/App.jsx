@@ -1502,6 +1502,111 @@ function SideEffectTracker() {
 }
 
 // ==================== DRUG INTERACTION CHECKER ====================
+function DrugInteractionChecker() {
+  const [drugs, setDrugs] = useState(() => {
+    const saved = localStorage.getItem("userDrugs");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [newDrug, setNewDrug] = useState("");
+  const commonDrugs = ["Metformin", "Lisinopril", "Atorvastatin", "Aspirin", "Omeprazole", "Sertraline", "Warfarin", "Ibuprofen", "Amlodipine", "Albuterol"];
+
+  const interactions = {
+    "Metformin-Contrast dye": { severity: "severe", note: "Avoid contrast dye within 48 hours" },
+    "Warfarin-Ibuprofen": { severity: "severe", note: "Increased bleeding risk" },
+    "Aspirin-Ibuprofen": { severity: "severe", note: "Both are NSAIDs, avoid combination" },
+    "Lisinopril-NSAIDs": { severity: "moderate", note: "Reduced BP control" },
+    "Omeprazole-Iron": { severity: "moderate", note: "Reduced iron absorption" },
+    "Warfarin-Aspirin": { severity: "moderate", note: "Bleeding risk" },
+  };
+
+  const addDrug = () => {
+    if (!newDrug) return;
+    if (!drugs.includes(newDrug)) {
+      setDrugs([...drugs, newDrug]);
+      localStorage.setItem("userDrugs", JSON.stringify([...drugs, newDrug]));
+    }
+    setNewDrug("");
+  };
+
+  const removeDrug = (drug) => {
+    const updated = drugs.filter((d) => d !== drug);
+    setDrugs(updated);
+    localStorage.setItem("userDrugs", JSON.stringify(updated));
+  };
+
+  const getInteractions = () => {
+    const found = [];
+    for (let i = 0; i < drugs.length; i++) {
+      for (let j = i + 1; j < drugs.length; j++) {
+        const key1 = `${drugs[i]}-${drugs[j]}`;
+        const key2 = `${drugs[j]}-${drugs[i]}`;
+        if (interactions[key1]) found.push({ drugs: [drugs[i], drugs[j]], ...interactions[key1] });
+        if (interactions[key2]) found.push({ drugs: [drugs[j], drugs[i]], ...interactions[key2] });
+      }
+    }
+    return found;
+  };
+
+  const interactionList = getInteractions();
+
+  return (
+    <>
+      <TopBar title="💊 Drug Interaction Checker" subtitle="Check if your medications interact" />
+
+      <Card title="➕ Add Your Medications" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+          <input list="drugList" value={newDrug} onChange={(e) => setNewDrug(e.target.value)} placeholder="Enter medication name..." style={{ flex: 1, padding: "10px 12px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          <button onClick={addDrug} style={{ padding: "10px 20px", background: C.teal, color: "#000", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+            ➕ Add
+          </button>
+          <datalist id="drugList">
+            {commonDrugs.map((d) => (
+              <option key={d} value={d} />
+            ))}
+          </datalist>
+        </div>
+
+        {drugs.length > 0 && (
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {drugs.map((drug) => (
+              <div key={drug} style={{ padding: "6px 12px", background: C.teal + "33", border: `1px solid ${C.teal}`, borderRadius: 20, display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: C.ink }}>{drug}</span>
+                <button onClick={() => removeDrug(drug)} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 16 }}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {interactionList.length > 0 && (
+        <Card title={`⚠️ INTERACTIONS FOUND (${interactionList.length})`} style={{ marginBottom: 20, border: `2px solid ${C.red}`, background: `linear-gradient(135deg, ${C.red}22, transparent)` }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {interactionList.map((inter, i) => (
+              <div key={i} style={{ padding: 12, background: C.panel, borderRadius: 8, borderLeft: `4px solid ${inter.severity === "severe" ? C.red : C.amber}` }}>
+                <b style={{ color: inter.severity === "severe" ? C.red : C.amber, display: "block", marginBottom: 4 }}>
+                  {inter.severity === "severe" ? "🚫 SEVERE" : "⚠️ MODERATE"}: {inter.drugs[0]} + {inter.drugs[1]}
+                </b>
+                <small style={{ color: C.muted }}>{inter.note}</small>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {drugs.length > 0 && interactionList.length === 0 && (
+        <Card style={{ textAlign: "center", padding: "30px" }}>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>✅</div>
+          <b style={{ color: C.green }}>No Interactions Found</b>
+          <p style={{ margin: "8px 0 0 0", color: C.muted, fontSize: 13 }}>Your medications are safe to take together</p>
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== MEAL PLANNER ====================
+// ==================== PROGRESS DASHBOARD ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -1825,6 +1930,7 @@ export default function VitaTwinAI() {
           {view === "treatment" && <TreatmentSimulator />}
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
+          {view === "interactions" && <DrugInteractionChecker />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
