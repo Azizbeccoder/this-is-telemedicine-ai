@@ -1697,6 +1697,125 @@ function ProgressDashboard() {
 }
 
 // ==================== WEIGHT & VITALS TRACKER ====================
+function VitalsTracker() {
+  const [vitals, setVitals] = useState(() => {
+    const saved = localStorage.getItem("vitalsHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [weight, setWeight] = useState("");
+  const [systolic, setSystolic] = useState("");
+  const [diastolic, setDiastolic] = useState("");
+  const [heartRate, setHeartRate] = useState("");
+  const [mood, setMood] = useState("5");
+  const [notes, setNotes] = useState("");
+
+  const addVital = () => {
+    if (!weight || !systolic || !diastolic) {
+      alert("Fill in weight and BP at least");
+      return;
+    }
+
+    const newVital = {
+      id: Date.now(),
+      weight,
+      systolic,
+      diastolic,
+      heartRate: heartRate || "—",
+      mood,
+      notes,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    const updated = [...vitals, newVital];
+    setVitals(updated);
+    localStorage.setItem("vitalsHistory", JSON.stringify(updated));
+
+    setWeight("");
+    setSystolic("");
+    setDiastolic("");
+    setHeartRate("");
+    setMood("5");
+    setNotes("");
+  };
+
+  return (
+    <>
+      <TopBar title="⚕️ Weight & Vitals Tracker" subtitle="Monitor vital signs for dosage adjustments" />
+
+      <Card title="📝 Log Vitals" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>WEIGHT (kg)</label>
+            <input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="70" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>SYSTOLIC</label>
+            <input type="number" value={systolic} onChange={(e) => setSystolic(e.target.value)} placeholder="120" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>DIASTOLIC</label>
+            <input type="number" value={diastolic} onChange={(e) => setDiastolic(e.target.value)} placeholder="80" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>HEART RATE</label>
+            <input type="number" value={heartRate} onChange={(e) => setHeartRate(e.target.value)} placeholder="72" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>NOTES</label>
+            <input type="text" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="How do you feel?" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>MOOD (1-10)</label>
+            <input type="range" min="1" max="10" value={mood} onChange={(e) => setMood(e.target.value)} style={{ width: "100%", height: 30 }} />
+            <div style={{ textAlign: "center", color: C.muted, fontSize: 11 }}>😐 {mood}/10</div>
+          </div>
+        </div>
+
+        <button onClick={addVital} style={{ width: "100%", padding: "10px 16px", background: `linear-gradient(135deg, ${C.pink}, ${C.red})`, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+          ➕ Log Vitals
+        </button>
+      </Card>
+
+      {vitals.length > 0 && (
+        <Card title={`📊 Vital Signs History (${vitals.length})`}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {vitals.slice().reverse().map((vital) => (
+              <div key={vital.id} style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+                <small style={{ color: C.muted, display: "block", marginBottom: 8 }}>{vital.date} • {vital.time}</small>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                  <div>
+                    <small style={{ color: C.muted, fontSize: 10 }}>Weight</small>
+                    <b style={{ display: "block", color: C.teal }}>{vital.weight} kg</b>
+                  </div>
+                  <div>
+                    <small style={{ color: C.muted, fontSize: 10 }}>BP</small>
+                    <b style={{ display: "block", color: C.pink }}>{vital.systolic}/{vital.diastolic}</b>
+                  </div>
+                  <div>
+                    <small style={{ color: C.muted, fontSize: 10 }}>HR</small>
+                    <b style={{ display: "block", color: C.purple }}>{vital.heartRate} bpm</b>
+                  </div>
+                  <div>
+                    <small style={{ color: C.muted, fontSize: 10 }}>Mood</small>
+                    <b style={{ display: "block", color: C.amber }}>{vital.mood}/10</b>
+                  </div>
+                </div>
+                {vital.notes && <small style={{ color: C.muted, fontSize: 10, display: "block" }}>💬 {vital.notes}</small>}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== DOCTOR APPOINTMENTS ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -2018,6 +2137,7 @@ export default function VitaTwinAI() {
           {view === "profile" && <UserProfilePage user={user} onLogout={handleLogout} go={setView} />}
           {view === "dashboard" && <Dashboard />}
           {view === "progress" && <ProgressDashboard />}
+          {view === "vitals" && <VitalsTracker />}
           {view === "treatment" && <TreatmentSimulator />}
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
