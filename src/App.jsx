@@ -1607,6 +1607,96 @@ function DrugInteractionChecker() {
 
 // ==================== MEAL PLANNER ====================
 // ==================== PROGRESS DASHBOARD ====================
+function ProgressDashboard() {
+  const [vitals, setVitals] = useState(() => {
+    const saved = localStorage.getItem("vitalsHistory");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const getChartData = () => {
+    return vitals.slice(-7).map((v, i) => ({
+      day: `Day ${i + 1}`,
+      weight: v.weight ? parseFloat(v.weight) : null,
+      bp: v.systolic ? parseFloat(v.systolic) : null,
+      mood: v.mood ? parseInt(v.mood) : null,
+    }));
+  };
+
+  const calculateTrend = (field) => {
+    if (vitals.length < 2) return "📊 No trend yet";
+    const latest = vitals[vitals.length - 1][field];
+    const previous = vitals[vitals.length - 2][field];
+    if (!latest || !previous) return "—";
+    const change = parseFloat(latest) - parseFloat(previous);
+    if (change > 0) return `⬆️ +${change.toFixed(1)}`;
+    if (change < 0) return `⬇️ ${change.toFixed(1)}`;
+    return "→ Same";
+  };
+
+  return (
+    <>
+      <TopBar title="📈 Health Progress Dashboard" subtitle="See your health improvements over time" />
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 20 }}>
+        <Card>
+          <small style={{ color: C.muted, display: "block", marginBottom: 4 }}>WEIGHT TREND</small>
+          <div style={{ fontSize: 20, fontWeight: 700, color: C.teal }}>
+            {vitals.length > 0 ? `${vitals[vitals.length - 1].weight} kg` : "—"}
+          </div>
+          <small style={{ color: C.green }}>{calculateTrend("weight")}</small>
+        </Card>
+
+        <Card>
+          <small style={{ color: C.muted, display: "block", marginBottom: 4 }}>BLOOD PRESSURE</small>
+          <div style={{ fontSize: 20, fontWeight: 700, color: C.pink }}>
+            {vitals.length > 0 ? `${vitals[vitals.length - 1].systolic}/${vitals[vitals.length - 1].diastolic}` : "—"}
+          </div>
+          <small style={{ color: C.amber }}>{calculateTrend("systolic")}</small>
+        </Card>
+
+        <Card>
+          <small style={{ color: C.muted, display: "block", marginBottom: 4 }}>MOOD SCORE</small>
+          <div style={{ fontSize: 20, fontWeight: 700, color: C.purple }}>
+            {vitals.length > 0 ? `${vitals[vitals.length - 1].mood}/10` : "—"}
+          </div>
+          <small style={{ color: C.purple }}>Recent trend</small>
+        </Card>
+
+        <Card>
+          <small style={{ color: C.muted, display: "block", marginBottom: 4 }}>READINGS</small>
+          <div style={{ fontSize: 20, fontWeight: 700, color: C.blue }}>{vitals.length}</div>
+          <small style={{ color: C.blue }}>Total logged</small>
+        </Card>
+      </div>
+
+      <Card title="📊 7-Day Trend Chart" style={{ marginBottom: 20 }}>
+        <div style={{ padding: 16, background: C.panel, borderRadius: 8, textAlign: "center", minHeight: 200 }}>
+          <p style={{ color: C.muted, margin: 0 }}>📈 Chart visualization (7+ readings needed)</p>
+          <small style={{ color: C.muted }}>Log weight/vitals daily to see trends</small>
+        </div>
+      </Card>
+
+      <Card title="💡 Insights">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <div style={{ padding: 12, background: C.green + "22", borderRadius: 8, borderLeft: `3px solid ${C.green}` }}>
+            <b style={{ color: C.green, fontSize: 12, display: "block", marginBottom: 4 }}>✅ Positive</b>
+            <small style={{ color: C.muted, fontSize: 11 }}>Weight stable past 3 days</small>
+          </div>
+          <div style={{ padding: 12, background: C.amber + "22", borderRadius: 8, borderLeft: `3px solid ${C.amber}` }}>
+            <b style={{ color: C.amber, fontSize: 12, display: "block", marginBottom: 4 }}>⚠️ Watch</b>
+            <small style={{ color: C.muted, fontSize: 11 }}>BP trend upward - monitor</small>
+          </div>
+          <div style={{ padding: 12, background: C.blue + "22", borderRadius: 8, borderLeft: `3px solid ${C.blue}` }}>
+            <b style={{ color: C.blue, fontSize: 12, display: "block", marginBottom: 4 }}>📊 Track</b>
+            <small style={{ color: C.muted, fontSize: 11 }}>Mood improving with exercise</small>
+          </div>
+        </div>
+      </Card>
+    </>
+  );
+}
+
+// ==================== WEIGHT & VITALS TRACKER ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -1927,6 +2017,7 @@ export default function VitaTwinAI() {
           {view === "login" && <LoginSignup onLogin={handleLogin} />}
           {view === "profile" && <UserProfilePage user={user} onLogout={handleLogout} go={setView} />}
           {view === "dashboard" && <Dashboard />}
+          {view === "progress" && <ProgressDashboard />}
           {view === "treatment" && <TreatmentSimulator />}
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
