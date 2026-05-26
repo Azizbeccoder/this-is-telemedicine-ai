@@ -1816,6 +1816,132 @@ function VitalsTracker() {
 }
 
 // ==================== DOCTOR APPOINTMENTS ====================
+function DoctorAppointments() {
+  const [appointments, setAppointments] = useState(() => {
+    const saved = localStorage.getItem("appointments");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [doctorName, setDoctorName] = useState("");
+  const [specialty, setSpecialty] = useState("General");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("09:00");
+  const [location, setLocation] = useState("");
+  const [notes, setNotes] = useState("");
+
+  const addAppointment = () => {
+    if (!doctorName || !date) {
+      alert("Fill in doctor name and date");
+      return;
+    }
+
+    const newAppt = {
+      id: Date.now(),
+      doctorName,
+      specialty,
+      date,
+      time,
+      location,
+      notes,
+      createdAt: new Date().toLocaleDateString(),
+      reminder: true,
+    };
+
+    const updated = [...appointments, newAppt];
+    setAppointments(updated);
+    localStorage.setItem("appointments", JSON.stringify(updated));
+
+    setDoctorName("");
+    setSpecialty("General");
+    setDate("");
+    setTime("09:00");
+    setLocation("");
+    setNotes("");
+  };
+
+  const deleteAppt = (id) => {
+    const updated = appointments.filter((a) => a.id !== id);
+    setAppointments(updated);
+    localStorage.setItem("appointments", JSON.stringify(updated));
+  };
+
+  const getUpcomingAppts = () => {
+    return appointments.filter((a) => new Date(a.date) >= new Date()).sort((a, b) => new Date(a.date) - new Date(b.date));
+  };
+
+  return (
+    <>
+      <TopBar title="📅 Doctor Appointments" subtitle="Schedule & track appointments" />
+
+      <Card title="➕ Schedule Appointment" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>DOCTOR NAME</label>
+            <input type="text" value={doctorName} onChange={(e) => setDoctorName(e.target.value)} placeholder="Dr. Smith" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>SPECIALTY</label>
+            <select value={specialty} onChange={(e) => setSpecialty(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }}>
+              <option>General</option>
+              <option>Cardiology</option>
+              <option>Neurology</option>
+              <option>Endocrinology</option>
+              <option>Gastroenterology</option>
+            </select>
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>DATE</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>TIME</label>
+            <input type="time" value={time} onChange={(e) => setTime(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12, marginBottom: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>LOCATION</label>
+            <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Hospital/Clinic address" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            <button onClick={addAppointment} style={{ width: "100%", padding: "8px 12px", background: `linear-gradient(135deg, ${C.blue}, ${C.teal})`, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+              ➕ Add
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>NOTES</label>
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Questions to ask, tests needed, etc." style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", minHeight: 60, resize: "vertical" }} />
+        </div>
+      </Card>
+
+      {getUpcomingAppts().length > 0 && (
+        <Card title={`📅 Upcoming Appointments (${getUpcomingAppts().length})`} style={{ marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+            {getUpcomingAppts().map((appt) => (
+              <div key={appt.id} style={{ padding: 14, background: `linear-gradient(135deg, ${C.blue}22, transparent)`, border: `2px solid ${C.blue}`, borderRadius: 10 }}>
+                <b style={{ display: "block", marginBottom: 8, color: C.ink }}>👨‍⚕️ {appt.doctorName}</b>
+                <small style={{ display: "block", color: C.muted, marginBottom: 8 }}>{appt.specialty}</small>
+                <div style={{ padding: 10, background: C.panel, borderRadius: 6, marginBottom: 8, textAlign: "center" }}>
+                  <b style={{ color: C.teal, display: "block" }}>{appt.date} at {appt.time}</b>
+                </div>
+                {appt.location && <small style={{ display: "block", color: C.muted, marginBottom: 6 }}>📍 {appt.location}</small>}
+                {appt.notes && <small style={{ display: "block", color: C.muted, marginBottom: 8 }}>📝 {appt.notes}</small>}
+                <button onClick={() => deleteAppt(appt.id)} style={{ width: "100%", padding: "6px", background: C.red, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 11 }}>
+                  ❌ Cancel
+                </button>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
+// ==================== USER SETTINGS ====================
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -2138,6 +2264,7 @@ export default function VitaTwinAI() {
           {view === "dashboard" && <Dashboard />}
           {view === "progress" && <ProgressDashboard />}
           {view === "vitals" && <VitalsTracker />}
+          {view === "appointments" && <DoctorAppointments />}
           {view === "treatment" && <TreatmentSimulator />}
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
