@@ -1942,6 +1942,119 @@ function DoctorAppointments() {
 }
 
 // ==================== USER SETTINGS ====================
+function UserSettings() {
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem("userSettings");
+    return saved ? JSON.parse(saved) : { notifications: true, voice: false, theme: "dark", dataBackup: true };
+  });
+
+  const updateSetting = (key, value) => {
+    const updated = { ...settings, [key]: value };
+    setSettings(updated);
+    localStorage.setItem("userSettings", JSON.stringify(updated));
+  };
+
+  const exportData = () => {
+    const allData = {
+      settings: localStorage.getItem("userSettings"),
+      vitals: localStorage.getItem("vitalsHistory"),
+      symptoms: localStorage.getItem("symptoms"),
+      sideEffects: localStorage.getItem("sideEffects"),
+      medications: localStorage.getItem("medicationReminders"),
+      meals: localStorage.getItem("meals"),
+      appointments: localStorage.getItem("appointments"),
+    };
+    const json = JSON.stringify(allData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `health-data-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+  };
+
+  return (
+    <>
+      <TopBar title="⚙️ Settings & Privacy" subtitle="Manage your preferences and data" />
+
+      <Card title="🔔 Notifications" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 12, background: C.panel, borderRadius: 8 }}>
+            <span style={{ fontSize: 13, color: C.ink }}>Enable Push Notifications</span>
+            <input type="checkbox" checked={settings.notifications} onChange={(e) => updateSetting("notifications", e.target.checked)} style={{ width: 18, height: 18, cursor: "pointer" }} />
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 12, background: C.panel, borderRadius: 8 }}>
+            <span style={{ fontSize: 13, color: C.ink }}>Enable Voice Reminders</span>
+            <input type="checkbox" checked={settings.voice} onChange={(e) => updateSetting("voice", e.target.checked)} style={{ width: 18, height: 18, cursor: "pointer" }} />
+          </div>
+
+          <button onClick={() => {
+            const msg = new SpeechSynthesisUtterance("This is a test voice reminder. Your medication is ready.");
+            speechSynthesis.speak(msg);
+          }} style={{ padding: "10px 16px", background: C.purple, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+            🔊 Test Voice Alert
+          </button>
+        </div>
+      </Card>
+
+      <Card title="💾 Data Management" style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <button onClick={exportData} style={{ padding: "12px 16px", background: `linear-gradient(135deg, ${C.green}, ${C.teal})`, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+            📥 Export All Data (JSON)
+          </button>
+
+          <button onClick={() => {
+            if (window.confirm("Delete ALL local data? This cannot be undone!")) {
+              Object.keys(localStorage).forEach((key) => {
+                if (key.startsWith("medicationReminders") || key.startsWith("symptoms") || key.startsWith("vitalsHistory") || key.startsWith("sideEffects") || key.startsWith("meals") || key.startsWith("appointments")) {
+                  localStorage.removeItem(key);
+                }
+              });
+              alert("Data cleared!");
+              window.location.reload();
+            }
+          }} style={{ padding: "12px 16px", background: C.red, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+            🗑️ Clear All Data
+          </button>
+
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+            <b style={{ color: C.teal, display: "block", marginBottom: 6 }}>📊 Data Statistics</b>
+            <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.8 }}>
+              <div>• Vitals logged: {JSON.parse(localStorage.getItem("vitalsHistory") || "[]").length}</div>
+              <div>• Symptoms tracked: {JSON.parse(localStorage.getItem("symptoms") || "[]").length}</div>
+              <div>• Side effects: {JSON.parse(localStorage.getItem("sideEffects") || "[]").length}</div>
+              <div>• Medications: {JSON.parse(localStorage.getItem("medicationReminders") || "[]").length}</div>
+              <div>• Appointments: {JSON.parse(localStorage.getItem("appointments") || "[]").length}</div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      <Card title="👤 About This App">
+        <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.8 }}>
+          <p style={{ margin: "0 0 10px 0" }}>
+            <b style={{ color: C.teal }}>VitaTwin Health Platform</b><br />
+            Advanced AI-powered health management system
+          </p>
+          <p style={{ margin: "0 0 10px 0" }}>
+            <b style={{ color: C.teal }}>Version:</b> 2.0 (with advanced tracking)
+          </p>
+          <p style={{ margin: "0 0 10px 0" }}>
+            <b style={{ color: C.teal }}>Storage:</b> All data stored locally in your browser (100% private)
+          </p>
+          <p style={{ margin: "0 0 10px 0" }}>
+            <b style={{ color: C.teal }}>Privacy:</b> No cloud sync, no tracking, no ads
+          </p>
+          <p style={{ margin: 0 }}>
+            © 2026 VitaTwin AI • Abdulaziz (Student ID: 24200713)
+          </p>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -2269,6 +2382,7 @@ export default function VitaTwinAI() {
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
           {view === "interactions" && <DrugInteractionChecker />}
+          {view === "settings" && <UserSettings />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
         </main>
