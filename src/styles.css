@@ -757,3 +757,21 @@ a:hover {
 body > div {
   animation: fadeIn 0.5s ease-out;
 }
+
+/* ==================== FOCUS STATES ==================== */
+button:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
