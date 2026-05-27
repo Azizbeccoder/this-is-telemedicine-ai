@@ -2055,6 +2055,110 @@ function UserSettings() {
   );
 }
 
+function MealPlanner() {
+  const [meals, setMeals] = useState(() => {
+    const saved = localStorage.getItem("meals");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [mealName, setMealName] = useState("");
+  const [mealTime, setMealTime] = useState("breakfast");
+  const [foods, setFoods] = useState("");
+
+  const foodInteractions = {
+    Warfarin: ["Kale", "Spinach", "Broccoli"],
+    Metformin: ["Alcohol", "High-fat foods"],
+    "Omeprazole": ["Iron", "Calcium", "Vitamin B12"],
+    "ACE Inhibitors": ["Potassium", "Bananas", "Spinach"],
+  };
+
+  const addMeal = () => {
+    if (!mealName || !foods) return;
+    const newMeal = {
+      id: Date.now(),
+      name: mealName,
+      time: mealTime,
+      foods: foods.split(",").map((f) => f.trim()),
+      date: new Date().toLocaleDateString(),
+    };
+    const updated = [...meals, newMeal];
+    setMeals(updated);
+    localStorage.setItem("meals", JSON.stringify(updated));
+    setMealName("");
+    setFoods("");
+  };
+
+  return (
+    <>
+      <TopBar title="🍽️ Meal Planner" subtitle="Track meals and food-drug interactions" />
+
+      <Card title="➕ Log Meal" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr 1fr", gap: 12 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>MEAL</label>
+            <input type="text" value={mealName} onChange={(e) => setMealName(e.target.value)} placeholder="Breakfast, Lunch, etc" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>TIME</label>
+            <select value={mealTime} onChange={(e) => setMealTime(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }}>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700 }}>FOODS (comma-separated)</label>
+            <input type="text" value={foods} onChange={(e) => setFoods(e.target.value)} placeholder="Rice, Chicken, Vegetables..." style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit" }} />
+          </div>
+          <div style={{ display: "flex", alignItems: "flex-end" }}>
+            <button onClick={addMeal} style={{ width: "100%", padding: "8px 12px", background: `linear-gradient(135deg, ${C.green}, ${C.teal})`, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600 }}>
+              ➕ Add Meal
+            </button>
+          </div>
+        </div>
+      </Card>
+
+      <Card title="⚠️ Food-Drug Interactions Guide">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 12 }}>
+          {Object.entries(foodInteractions).map(([drug, foods]) => (
+            <div key={drug} style={{ padding: 12, background: C.panel, borderRadius: 8, borderLeft: `3px solid ${C.amber}` }}>
+              <b style={{ color: C.amber, display: "block", marginBottom: 6 }}>💊 {drug}</b>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {foods.map((food) => (
+                  <span key={food} style={{ fontSize: 11, padding: "3px 8px", background: C.panel2, borderRadius: 4, color: C.muted }}>
+                    🚫 {food}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {meals.length > 0 && (
+        <Card title="📋 Your Meals">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+            {meals.slice().reverse().map((meal) => (
+              <div key={meal.id} style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+                <b style={{ display: "block", marginBottom: 6, textTransform: "capitalize" }}>🍽️ {meal.name} ({meal.time})</b>
+                <small style={{ display: "block", color: C.muted, marginBottom: 8 }}>{meal.date}</small>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {meal.foods.map((food) => (
+                    <span key={food} style={{ fontSize: 11, padding: "3px 8px", background: C.line, borderRadius: 4, color: C.muted }}>
+                      {food}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -2382,6 +2486,7 @@ export default function VitaTwinAI() {
           {view === "symptoms" && <SymptomTracker />}
           {view === "sideeffects" && <SideEffectTracker />}
           {view === "interactions" && <DrugInteractionChecker />}
+          {view === "meals" && <MealPlanner />}
           {view === "settings" && <UserSettings />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
