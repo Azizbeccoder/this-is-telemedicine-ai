@@ -2159,6 +2159,239 @@ function MealPlanner() {
   );
 }
 
+function MedicationReminders() {
+  const [reminders, setReminders] = useState(() => {
+    const saved = localStorage.getItem("medicationReminders");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [pillName, setPillName] = useState("");
+  const [pillTime, setPillTime] = useState("09:00");
+  const [dosage, setDosage] = useState("");
+  const [frequency, setFrequency] = useState("daily");
+  const [notificationEnabled, setNotificationEnabled] = useState(true);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Check for upcoming medications every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+      reminders.forEach((reminder) => {
+        const [remindHour, remindMinute] = reminder.time.split(":").map(Number);
+        const reminderDate = new Date();
+        reminderDate.setHours(remindHour, remindMinute, 0);
+
+        const timeDiff = (reminderDate - now) / 1000 / 60; // in minutes
+
+        // Send notification when 5 minutes left
+        if (timeDiff <= 5 && timeDiff > 4.5 && notificationEnabled) {
+          sendNotification(reminder);
+        }
+      });
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [reminders, notificationEnabled]);
+
+  const sendNotification = (reminder) => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("💊 Medication Reminder", {
+        body: `Time to take ${reminder.pillName} (${reminder.dosage})!\n⏰ In 5 minutes`,
+        icon: "💊",
+        tag: `med-${reminder.id}`,
+        requireInteraction: true,
+      });
+    }
+  };
+
+  const addReminder = () => {
+    if (!pillName || !pillTime) {
+      alert("Please fill in pill name and time");
+      return;
+    }
+
+    const newReminder = {
+      id: Date.now(),
+      pillName,
+      time: pillTime,
+      dosage,
+      frequency,
+      createdAt: new Date().toLocaleString(),
+    };
+
+    const updated = [...reminders, newReminder];
+    setReminders(updated);
+    localStorage.setItem("medicationReminders", JSON.stringify(updated));
+
+    // Reset form
+    setPillName("");
+    setPillTime("09:00");
+    setDosage("");
+    setFrequency("daily");
+  };
+
+  const deleteReminder = (id) => {
+    const updated = reminders.filter((r) => r.id !== id);
+    setReminders(updated);
+    localStorage.setItem("medicationReminders", JSON.stringify(updated));
+  };
+
+  const testNotification = () => {
+    sendNotification({ pillName: "Test Pill", dosage: "1 tablet", id: "test" });
+  };
+
+  const getUpcomingReminders = () => {
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+    return reminders
+      .map((r) => {
+        const [hour, minute] = r.time.split(":").map(Number);
+        const reminderDate = new Date();
+        reminderDate.setHours(hour, minute, 0);
+        const diffMinutes = Math.round((reminderDate - now) / 1000 / 60);
+
+        return { ...r, minutesUntil: diffMinutes };
+      })
+      .sort((a, b) => a.minutesUntil - b.minutesUntil);
+  };
+
+  return (
+    <>
+      <TopBar title="💊 Pill Reminders & Notifications" subtitle="Never miss a dose - get smart notifications" />
+
+      {/* Add Reminder Form */}
+      <Card title="➕ Add New Medication Reminder" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr", gap: 12, marginBottom: 16 }}>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Pill Name</label>
+            <input type="text" value={pillName} onChange={(e) => setPillName(e.target.value)} placeholder="e.g., Metformin" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Time</label>
+            <input type="time" value={pillTime} onChange={(e) => setPillTime(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Dosage</label>
+            <input type="text" value={dosage} onChange={(e) => setDosage(e.target.value)} placeholder="e.g., 1 tablet" style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontSize: 11, color: C.teal, marginBottom: 4, fontWeight: 700, textTransform: "uppercase" }}>Frequency</label>
+            <select value={frequency} onChange={(e) => setFrequency(e.target.value)} style={{ width: "100%", padding: "8px 10px", background: C.panel, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink, fontFamily: "inherit", fontSize: 13 }}>
+              <option>daily</option>
+              <option>twice daily</option>
+              <option>3x daily</option>
+              <option>weekly</option>
+            </select>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+            <button onClick={addReminder} style={{ width: "100%", padding: "8px 12px", background: `linear-gradient(135deg, ${C.teal}, ${C.blue})`, color: "#000", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 13 }}>
+              ➕ Add Reminder
+            </button>
+          </div>
+        </div>
+
+        {/* Notification Settings */}
+        <div style={{ display: "flex", gap: 12, padding: 12, background: C.panel, borderRadius: 8, alignItems: "center", marginBottom: 12 }}>
+          <input type="checkbox" checked={notificationEnabled} onChange={(e) => setNotificationEnabled(e.target.checked)} style={{ width: 18, height: 18, cursor: "pointer" }} />
+          <span style={{ flex: 1, fontSize: 13, color: C.ink }}>Enable notifications (5 min before dose)</span>
+          <button onClick={testNotification} style={{ padding: "6px 12px", background: C.purple, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: "inherit", fontWeight: 600, fontSize: 11 }}>
+            🔔 Test Notification
+          </button>
+        </div>
+      </Card>
+
+      {/* Active Reminders */}
+      {reminders.length > 0 && (
+        <Card title={`📅 Your Medications (${reminders.length})`} style={{ marginBottom: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
+            {getUpcomingReminders().map((reminder) => (
+              <div key={reminder.id} style={{ padding: 14, background: `linear-gradient(135deg, ${reminder.minutesUntil <= 5 && reminder.minutesUntil > 0 ? C.red : C.purple}22, transparent)`, border: `2px solid ${reminder.minutesUntil <= 5 && reminder.minutesUntil > 0 ? C.red : C.line}`, borderRadius: 10 }}>
+                {/* Header */}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 10 }}>
+                  <div>
+                    <b style={{ color: C.teal, display: "block", fontSize: 14 }}>💊 {reminder.pillName}</b>
+                    <small style={{ color: C.muted, fontSize: 10 }}>{reminder.frequency}</small>
+                  </div>
+                  <button onClick={() => deleteReminder(reminder.id)} style={{ background: C.red, color: "#fff", border: "none", width: 24, height: 24, borderRadius: "50%", cursor: "pointer", fontWeight: 700, fontSize: 14 }}>
+                    ×
+                  </button>
+                </div>
+
+                {/* Time */}
+                <div style={{ padding: 10, background: C.panel, borderRadius: 6, marginBottom: 10, textAlign: "center" }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: C.teal }}>{reminder.time}</div>
+                  <small style={{ color: reminder.minutesUntil <= 5 && reminder.minutesUntil > 0 ? C.red : C.muted, fontWeight: 600, fontSize: 11 }}>
+                    {reminder.minutesUntil <= 0
+                      ? "⏰ Time now!"
+                      : reminder.minutesUntil <= 5
+                      ? `🔔 ${reminder.minutesUntil} min left!`
+                      : `${reminder.minutesUntil} min left`}
+                  </small>
+                </div>
+
+                {/* Dosage */}
+                <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, padding: "6px 8px", background: C.panel, borderRadius: 4 }}>
+                  📍 {reminder.dosage || "As prescribed"}
+                </div>
+
+                {/* Status */}
+                <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ flex: 1, padding: "6px", background: reminder.minutesUntil <= 5 && reminder.minutesUntil > 0 ? `${C.red}44` : C.green + "44", borderRadius: 4, fontSize: 10, fontWeight: 600, color: reminder.minutesUntil <= 5 && reminder.minutesUntil > 0 ? C.red : C.green, textAlign: "center" }}>
+                    {reminder.minutesUntil <= 0 ? "🔴 NOW" : "✅ Pending"}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {reminders.length === 0 && (
+        <Card style={{ marginBottom: 20, textAlign: "center", padding: "40px 20px" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>💊</div>
+          <b style={{ display: "block", marginBottom: 8, color: C.teal, fontSize: 16 }}>No Reminders Yet</b>
+          <p style={{ margin: 0, color: C.muted, fontSize: 13 }}>Add your first medication reminder above to get started!</p>
+        </Card>
+      )}
+
+      {/* How It Works */}
+      <Card title="ℹ️ How Notifications Work" style={{ marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>1️⃣</div>
+            <b style={{ fontSize: 11, display: "block", marginBottom: 4, color: C.teal }}>Add Medication</b>
+            <small style={{ color: C.muted, fontSize: 10, lineHeight: 1.4 }}>Enter pill name, time, and dosage</small>
+          </div>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>2️⃣</div>
+            <b style={{ fontSize: 11, display: "block", marginBottom: 4, color: C.teal }}>App Tracks Time</b>
+            <small style={{ color: C.muted, fontSize: 10, lineHeight: 1.4 }}>Background service monitors upcoming doses</small>
+          </div>
+          <div style={{ padding: 12, background: C.panel, borderRadius: 8 }}>
+            <div style={{ fontSize: 24, marginBottom: 6 }}>3️⃣</div>
+            <b style={{ fontSize: 11, display: "block", marginBottom: 4, color: C.teal }}>Get Alert</b>
+            <small style={{ color: C.muted, fontSize: 10, lineHeight: 1.4 }}>Notification 5 minutes before time</small>
+          </div>
+        </div>
+        <div style={{ marginTop: 12, padding: 12, background: `${C.blue}22`, border: `1px solid ${C.blue}`, borderRadius: 8 }}>
+          <small style={{ color: C.muted, fontSize: 10 }}>
+            💡 Keep this app open or in background for notifications to work. Notifications require browser permission.
+          </small>
+        </div>
+      </Card>
+    </>
+  );
+}
+
 function Landing({ go }) {
   const features = [
     { icon: Heart, title: "Real-Time Monitoring", desc: "Live health tracking with advanced vitals monitoring", badge: "⚡ Essential" },
@@ -2487,6 +2720,7 @@ export default function VitaTwinAI() {
           {view === "sideeffects" && <SideEffectTracker />}
           {view === "interactions" && <DrugInteractionChecker />}
           {view === "meals" && <MealPlanner />}
+          {view === "reminders" && <MedicationReminders />}
           {view === "settings" && <UserSettings />}
           {view === "twin" && <Twin />}
           {view === "diagnosis" && <Diagnosis />}
