@@ -18,3 +18,11 @@ const agent = new http.Agent({
   maxSockets: 5,
   maxFreeSockets: 2,
 });
+
+const MODEL_MAP = {
+  triage: "mistral",
+  empathic: "mistral",
+  clinical: "llama3:8b",
+};
+
+// ✅ Helper: Check if Ollama is responding
