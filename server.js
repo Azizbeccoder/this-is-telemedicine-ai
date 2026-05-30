@@ -26,3 +26,11 @@ const MODEL_MAP = {
 };
 
 // ✅ Helper: Check if Ollama is responding
+async function isOllamaAvailable() {
+  try {
+    const res = await fetch("http://localhost:11434/api/tags", { signal: AbortSignal.timeout(2000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
