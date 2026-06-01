@@ -254,3 +254,12 @@ app.post("/api/predict-treatment", async (req, res) => {
     });
   }
 });
+
+const dist = path.join(__dirname, "dist");
+
+if (fs.existsSync(dist)) {
+  app.use(express.static(dist));
+  app.get(/^(?!\/api\/).*/, (_req, res) => {
+    res.sendFile(path.join(dist, "index.html"));
+  });
+}
