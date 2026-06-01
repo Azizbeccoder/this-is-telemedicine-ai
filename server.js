@@ -34,3 +34,67 @@ async function isOllamaAvailable() {
     return false;
   }
 }
+
+app.post("/api/anthropic", async (req, res) => {
+  console.log("\n[REQUEST] Received message");
+  const startTime = Date.now();
+
+  try {
+    const { system, messages = [], modeId } = req.body || {};
+
+    const model = MODEL_MAP[modeId] || "mistral";
+    console.log(`[OLLAMA] Using model: ${model}`);
+
+    // Check if Ollama is available
+    const ollamaAvailable = await isOllamaAvailable();
+
+    if (!ollamaAvailable) {
+      console.log("[OLLAMA] Not responding - using demo response");
+      return res.json({
+        type: "success",
+        message: "🤖 Demo: I'm your AI health assistant. (Ollama not responding - using demo mode)",
+      });
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+    const r = await fetch("http://localhost:11434/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+      }),
+      agent,
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!r.ok) {
+      console.log("[OLLAMA ERROR] Response not OK");
+      return res.json({
+        type: "success",
+        message: "Demo response (Ollama error)",
+      });
+    }
+
+    const data = await r.json();
+
+    res.json({
+      type: "success",
+      message: data.message?.content || "Demo response",
+    });
+
+  } catch (e) {
+    console.log("[ERROR]:", e.message);
+    res.json({
+      type: "success",
+      message: "🤖 Demo: Ollama is not responding. Please make sure Ollama is running with: ollama serve",
+    });
+  }
+});
+
+// ✅ Treatment Prediction Endpoint with Fallbacks
