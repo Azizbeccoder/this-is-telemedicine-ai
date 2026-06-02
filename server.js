@@ -263,3 +263,11 @@ if (fs.existsSync(dist)) {
     res.sendFile(path.join(dist, "index.html"));
   });
 }
+
+const PORT = process.env.PORT || 8787;
+
+app.listen(PORT, () => {
+  console.log(`\n✓ Server on http://localhost:${PORT}`);
+  console.log("✓ Treatment Simulator ready!");
+  console.log("✓ Ollama optional - works with or without it");
+});
