@@ -247,3 +247,133 @@ function TopBar({ title }) {
     </div>
   );
 }
+
+function Dashboard() {
+  const organs = [
+    { i: Heart, n: "Heart", v: "98%", s: "Healthy", c: C.pink },
+    { i: Brain, n: "Brain", v: "96%", s: "Healthy", c: C.purple },
+    { i: Wind, n: "Lungs", v: "94%", s: "Healthy", c: C.teal },
+    { i: Shield, n: "Immune System", v: "90%", s: "Strong", c: C.green },
+    { i: Activity, n: "Digestive", v: "92%", s: "Strong", c: C.blue },
+    { i: Moon, n: "Sleep Quality", v: "85%", s: "Good", c: C.amber },
+  ];
+  const summary = [
+    { i: Footprints, t: "Steps", v: "8,432", sub: "/10,000" },
+    { i: Flame, t: "Calories", v: "1,234", sub: "/2,000" },
+    { i: Moon, t: "Sleep", v: "7h 45m", sub: "" },
+    { i: Heart, t: "Heart Rate", v: "72 bpm", sub: "" },
+    { i: Zap, t: "Stress Level", v: "Low", sub: "" },
+  ];
+  return (
+    <>
+      <TopBar title="Dashboard" />
+      <div className="vt-welcome">
+        <div className="vt-avatar"><User size={22} /></div>
+        <div><b>Welcome back, Alex!</b><small>Here's your health overview</small></div>
+      </div>
+
+      <div className="vt-stat-row">
+        {[["Health Score", "87", "Excellent", C.teal], ["Biological Age", "28", "Actual Age: 24", C.purple], ["Risk Level", "Low", "Keep going!", C.green], ["Active Conditions", "0", "No conditions", C.blue]].map(([t, v, s, c]) => (
+          <div className="vt-stat" key={t}><small>{t}</small><b style={{ color: c }}>{v}</b><span>{s}</span></div>
+        ))}
+      </div>
+
+      <div className="vt-grid-2">
+        <div className="vt-card">
+          <h3>Digital Twin Overview</h3>
+          <div className="vt-twin-overview">
+            <TwinFigure size={210} />
+            <div className="vt-organs">
+              {organs.map((o) => (
+                <div key={o.n} className="vt-organ"><span style={{ color: o.c }}><o.i size={16} /></span><div><b>{o.n}</b><small>{o.v} · {o.s}</small></div></div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="vt-card">
+          <h3>Today's Summary</h3>
+          <div className="vt-summary">
+            {summary.map((s) => (
+              <div key={s.t} className="vt-sum-row"><span><s.i size={15} stroke={C.teal} /> {s.t}</span><b>{s.v} <em>{s.sub}</em></b></div>
+            ))}
+          </div>
+          <div className="vt-appt">
+            <small>Next Appointment</small>
+            <div><div className="vt-avatar sm"><User size={16} /></div><div><b>Dr. Sarah Johnson</b><small>Cardiologist · May 24, 10:00 AM</small></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="vt-grid-3">
+        <div className="vt-card sm">
+          <h4>Health Insights</h4>
+          <p>Your stress level has <span style={{ color: C.green }}>decreased by 15%</span> compared to last week.</p>
+        </div>
+        <div className="vt-card sm">
+          <h4>Risk Prediction</h4>
+          <div className="vt-risk"><RadialGauge value={12} color={C.amber} /><div><b>Hypertension</b><small style={{ color: C.green }}>Risk is low</small></div></div>
+        </div>
+        <div className="vt-card sm">
+          <h4>AI Confidence</h4>
+          <Bar value={86} color={C.teal} /><small>86% diagnostic confidence</small>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function RadialGauge({ value, color }) {
+  return (
+    <ResponsiveContainer width={70} height={70}>
+      <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ v: value, fill: color }]} startAngle={90} endAngle={90 - (value / 100) * 360}>
+        <RadialBar dataKey="v" cornerRadius={10} background={{ fill: C.line }} />
+      </RadialBarChart>
+    </ResponsiveContainer>
+  );
+}
+const Bar = ({ value, color }) => (
+  <div className="vt-bar"><div style={{ width: `${value}%`, background: `linear-gradient(90deg,${color},${C.blue})` }} /></div>
+);
+
+// ── AI DIAGNOSIS ─────────────────────────────────────────────────────────---
+function Diagnosis() {
+  const [tab, setTab] = useState("Analysis");
+  const steps = [["Symptom Analysis", "Completed"], ["AI Processing", "Completed"], ["Deep Scan", "In Progress"], ["Cross-Check", "Pending"], ["Report Generation", "Pending"]];
+  const findings = [["Viral Pneumonia", 86, C.red], ["Bronchitis", 45, C.amber], ["Cold / Flu", 23, C.blue]];
+  return (
+    <>
+      <TopBar title="AI Diagnosis" />
+      <div className="vt-tabs">{["Symptoms", "Analysis", "Results", "Recommendations"].map((t) => <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{t}</button>)}</div>
+      <div className="vt-grid-2">
+        <div className="vt-card">
+          <h3>Analysis Progress</h3>
+          <div className="vt-steps-v">
+            {steps.map(([s, st]) => (
+              <div key={s} className="vt-step-v">
+                <span className={"vt-dot " + st.replace(/\s/g, "").toLowerCase()}>{st === "Completed" ? <CheckCircle2 size={14} /> : st === "In Progress" ? <Loader2 size={14} className="spin" /> : ""}</span>
+                <div><b>{s}</b><small>{st}</small></div>
+              </div>
+            ))}
+          </div>
+          <div className="vt-lungs"><Wind size={120} stroke={C.teal} strokeWidth={0.8} style={{ filter: `drop-shadow(0 0 20px ${C.teal})`, opacity: 0.8 }} /></div>
+        </div>
+        <div className="vt-card">
+          <h3>AI Findings <small className="vt-sub">Top Possibilities</small></h3>
+          {findings.map(([n, p, c]) => (
+            <div key={n} className="vt-finding"><div className="vt-finding-h"><b>{n}</b><span style={{ color: c }}>{p}%</span></div><Bar value={p} color={c} /></div>
+          ))}
+          <h4 style={{ marginTop: 18 }}>Evidence</h4>
+          <ul className="vt-evidence">
+            {["Mild fever detected", "Cough pattern matched", "Oxygen saturation normal", "Lung inflammation mild"].map((e) => <li key={e}><CheckCircle2 size={13} stroke={C.teal} /> {e}</li>)}
+          </ul>
+          <div className="vt-conf"><span>Confidence Score</span><Bar value={86} color={C.teal} /><b>86%</b></div>
+          <button className="vt-cta full">View Full Report</button>
+        </div>
+      </div>
+      <div className="vt-note"><Shield size={13} /> Illustrative AI output on fictional data — not a real diagnosis. Always consult a licensed clinician.</div>
+    </>
+  );
+}
+
+// ── DIGITAL TWIN SIM ─────────────────────────────────────────────────────---
