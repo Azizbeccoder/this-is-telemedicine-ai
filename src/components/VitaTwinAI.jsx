@@ -512,3 +512,271 @@ function Monitoring() {
 // Override at build/run time with VITE_ANTHROPIC_ENDPOINT if needed.
 const ANTHROPIC_ENDPOINT =
   import.meta.env.VITE_ANTHROPIC_ENDPOINT || "/api/anthropic";
+
+const SYS = "You are VitaTwin AI, a friendly, careful health-assistant chatbot inside a digital-twin health demo app. " +
+  "Give helpful, general wellness information in a warm, concise tone. Use short paragraphs or brief bullet lists. " +
+  "You must NOT diagnose, prescribe, or replace a clinician — for any concerning or urgent symptom, recommend seeing a professional. " +
+  "Add a brief reminder that you are a demo assistant, not medical advice, when giving health guidance.";
+
+function Assistant() {
+  const [msgs, setMsgs] = useState([{ role: "assistant", content: "Hello Alex! 👋 I'm your VitaTwin AI assistant. Ask me anything about your health data, wellness habits, or how the digital twin works.\n\n*(Demo assistant — not medical advice.)*" }]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const endRef = useRef(null);
+  useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [msgs, busy]);
+
+  const send = async (text) => {
+    const q = (text ?? input).trim();
+    if (!q || busy) return;
+    const next = [...msgs, { role: "user", content: q }];
+    setMsgs(next); setInput(""); setBusy(true);
+    try {
+      const res = await fetch(ANTHROPIC_ENDPOINT, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYS,
+          messages: next.map((m) => ({ role: m.role, content: m.content })),
+        }),
+      });
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      const out = data.content.filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
+      setMsgs((p) => [...p, { role: "assistant", content: out }]);
+    } catch (e) {
+      setMsgs((p) => [...p, { role: "assistant", content: `⚠️ Couldn't reach the AI service (${e.message}).` }]);
+    }
+    setBusy(false);
+  };
+
+  const quick = ["Why have I felt tired lately?", "How can I lower my stress?", "Explain my digital twin", "Tips for better sleep"];
+  return (
+    <>
+      <TopBar title="AI Health Assistant" />
+      <div className="vt-chat-wrap">
+        <div className="vt-chat-head"><div className="vt-avatar bot"><Brain size={18} /></div><div><b>VitaTwin Assistant</b><small style={{ color: C.green }}>● Online · powered by Claude</small></div></div>
+        <div className="vt-chat-body">
+          {msgs.map((m, i) => (
+            <div key={i} className={"vt-msg " + m.role}>
+              {m.role === "assistant" && <div className="vt-avatar bot sm"><Brain size={14} /></div>}
+              <div className="vt-bubble">{m.content}</div>
+            </div>
+          ))}
+          {busy && <div className="vt-msg assistant"><div className="vt-avatar bot sm"><Brain size={14} /></div><div className="vt-bubble typing"><Loader2 size={15} className="spin" /> thinking…</div></div>}
+          <div ref={endRef} />
+        </div>
+        <div className="vt-quick">{quick.map((q) => <button key={q} onClick={() => send(q)} disabled={busy}>{q}</button>)}</div>
+        <div className="vt-chat-input">
+          <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Type your message..." disabled={busy} />
+          <button onClick={() => send()} disabled={busy || !input.trim()}>{busy ? <Loader2 size={16} className="spin" /> : <Send size={16} />}</button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── STYLES ──────────────────────────────────────────────────────────────---
+const styles = `
+.vt *{box-sizing:border-box}
+.vt{font-family:'Outfit',ui-sans-serif,system-ui,sans-serif;color:${C.ink};background:${C.bg};min-height:100%;font-size:14px}
+.vt h1,.vt h2,.vt h3,.vt h4{margin:0;font-weight:600;letter-spacing:-.01em}
+.vt .spin{animation:vtspin 1s linear infinite}@keyframes vtspin{to{transform:rotate(360deg)}}
+.vt-shell{display:flex;min-height:100vh;background:radial-gradient(900px 500px at 90% -5%, #14233f55 0,transparent 60%),radial-gradient(700px 500px at -5% 105%, #2a1a4f44 0,transparent 55%),${C.bg}}
+
+/* sidebar */
+.vt-side{width:212px;flex:none;background:${C.panel};border-right:1px solid ${C.line};padding:18px 12px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.vt-logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;padding:6px 8px 16px}
+.vt-logo b{color:${C.teal};font-weight:700}.vt-logo span b{color:${C.purple}}
+.vt-nav{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:${C.muted};padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13.5px;font-family:inherit;transition:.15s;text-align:left}
+.vt-nav:hover{background:${C.panel2};color:${C.ink}}
+.vt-nav.on{background:linear-gradient(90deg,${C.purple}33,${C.teal}22);color:${C.ink};box-shadow:inset 2px 0 0 ${C.teal}}
+.vt-side-foot{margin-top:auto}
+
+.vt-main{flex:1;padding:22px 26px;overflow-x:hidden}
+.vt-main.full{padding:0}
+
+/* topbar */
+.vt-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.vt-head h2{font-size:20px}
+.vt-head-r{display:flex;gap:10px;align-items:center}
+.vt-search{display:flex;align-items:center;gap:7px;background:${C.panel};border:1px solid ${C.line};border-radius:9px;padding:7px 11px;color:${C.muted}}
+.vt-search input{background:none;border:none;outline:none;color:${C.ink};font-family:inherit;font-size:13px;width:150px}
+.vt-icobtn{background:${C.panel};border:1px solid ${C.line};color:${C.muted};width:34px;height:34px;border-radius:9px;display:grid;place-items:center;cursor:pointer}
+.vt-icobtn:hover{color:${C.teal};border-color:${C.teal}}
+
+/* cards */
+.vt-card{background:linear-gradient(180deg,${C.panel2},${C.panel});border:1px solid ${C.line};border-radius:16px;padding:18px}
+.vt-card h3{font-size:15px;margin-bottom:14px}.vt-card h4{font-size:13px;color:${C.muted};margin-bottom:10px;font-weight:500}
+.vt-card.sm{padding:16px}.vt-card.center{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.vt-sub{color:${C.muted};font-size:11px;font-weight:400}
+.vt-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.vt-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1000px){.vt-grid-2,.vt-grid-3{grid-template-columns:1fr}}
+
+/* welcome + stats */
+.vt-welcome{display:flex;align-items:center;gap:12px;background:linear-gradient(90deg,${C.purple}22,transparent);border:1px solid ${C.line};border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.vt-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,${C.purple},${C.teal});display:grid;place-items:center;color:#fff;flex:none}
+.vt-avatar.sm{width:34px;height:34px}.vt-avatar.bot{background:linear-gradient(135deg,${C.teal},${C.blue})}
+.vt-welcome b{font-size:16px;display:block}.vt-welcome small{color:${C.muted}}
+.vt-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:760px){.vt-stat-row{grid-template-columns:1fr 1fr}}
+.vt-stat{background:linear-gradient(180deg,${C.panel2},${C.panel});border:1px solid ${C.line};border-radius:14px;padding:15px}
+.vt-stat small{color:${C.muted};font-size:11.5px}.vt-stat b{display:block;font-size:26px;margin:4px 0 2px}.vt-stat span{font-size:11.5px;color:${C.muted}}
+
+/* digital twin overview */
+.vt-twin-overview{display:flex;gap:14px;align-items:center}
+.vt-organs{display:grid;grid-template-columns:1fr 1fr;gap:9px;flex:1}
+.vt-organ{display:flex;gap:8px;align-items:center;background:${C.panel};border:1px solid ${C.line};border-radius:10px;padding:8px 10px}
+.vt-organ b{font-size:12.5px;display:block}.vt-organ small{font-size:10.5px;color:${C.muted}}
+
+/* summary */
+.vt-summary{display:flex;flex-direction:column;gap:9px}
+.vt-sum-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:7px 0;border-bottom:1px solid ${C.line}}
+.vt-sum-row span{display:flex;align-items:center;gap:8px;color:${C.muted}}
+.vt-sum-row em{color:${C.muted};font-style:normal;font-size:11px}
+.vt-appt{margin-top:14px;background:${C.panel};border:1px solid ${C.line};border-radius:12px;padding:12px}
+.vt-appt>small{color:${C.muted};font-size:11px}
+.vt-appt>div{display:flex;gap:10px;align-items:center;margin-top:8px}
+.vt-appt b{font-size:13px;display:block}.vt-appt small{font-size:11px;color:${C.muted}}
+
+.vt-risk{display:flex;align-items:center;gap:12px}
+.vt-bar{height:7px;background:${C.line};border-radius:6px;overflow:hidden;margin:6px 0}
+.vt-bar>div{height:100%;border-radius:6px}
+
+/* tabs */
+.vt-tabs{display:flex;gap:6px;margin-bottom:16px}
+.vt-tabs.between{justify-content:space-between}
+.vt-tabs button,.vt-range button{background:${C.panel};border:1px solid ${C.line};color:${C.muted};padding:7px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12.5px}
+.vt-tabs button.on,.vt-range button.on{background:linear-gradient(90deg,${C.purple},${C.teal});color:#fff;border-color:transparent}
+.vt-range{display:flex;gap:6px}
+
+/* diagnosis */
+.vt-steps-v{display:flex;flex-direction:column;gap:12px}
+.vt-step-v{display:flex;gap:10px;align-items:center}
+.vt-dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;border:1px solid ${C.line};color:${C.muted}}
+.vt-dot.completed{background:${C.green}22;color:${C.green};border-color:${C.green}}
+.vt-dot.inprogress{background:${C.amber}22;color:${C.amber};border-color:${C.amber}}
+.vt-step-v b{font-size:13px;display:block}.vt-step-v small{font-size:11px;color:${C.muted}}
+.vt-lungs{display:grid;place-items:center;margin-top:18px}
+.vt-finding{margin-bottom:12px}
+.vt-finding-h{display:flex;justify-content:space-between;font-size:13px;font-weight:500}
+.vt-evidence{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+.vt-evidence li{display:flex;gap:8px;align-items:center;font-size:12.5px;color:${C.muted}}
+.vt-conf{display:flex;align-items:center;gap:10px;margin:16px 0;font-size:12px;color:${C.muted}}
+.vt-conf .vt-bar{flex:1}
+.vt-note,.vt-disc{display:flex;align-items:center;gap:8px;color:${C.muted};font-size:11.5px;margin-top:14px;padding:10px 14px;background:${C.panel};border:1px solid ${C.line};border-radius:10px}
+
+/* twin sim */
+.vt-grid-twin{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:16px}
+@media(max-width:1000px){.vt-grid-twin{grid-template-columns:1fr}}
+.vt-scenarios{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.vt-scenario{display:flex;gap:11px;align-items:center;background:${C.panel};border:1px solid ${C.line};border-radius:11px;padding:11px;cursor:pointer;color:${C.ink};font-family:inherit;text-align:left;transition:.15s}
+.vt-scenario:hover{border-color:${C.teal}}
+.vt-scenario.on{background:linear-gradient(90deg,${C.teal}22,transparent);border-color:${C.teal}}
+.vt-scenario b{font-size:13px;display:block}.vt-scenario small{font-size:11px;color:${C.muted}}
+.vt-sim-results{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.vt-sim-row{display:flex;justify-content:space-between;align-items:center;background:${C.panel};border:1px solid ${C.line};border-radius:10px;padding:11px 13px;font-size:13px}
+
+/* analytics */
+.vt-metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+@media(max-width:760px){.vt-metric-row{grid-template-columns:1fr 1fr}}
+.vt-card.metric small{color:${C.muted};font-size:11.5px}.vt-card.metric b{display:block;font-size:22px;margin:3px 0 6px}.vt-card.metric em{font-size:12px;color:${C.muted};font-style:normal}
+.vt-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;color:${C.muted}}
+.vt-legend span{display:flex;align-items:center;gap:6px}.vt-legend i{width:9px;height:9px;border-radius:3px}
+
+/* monitoring */
+.vt-live{display:flex;align-items:center;gap:8px;color:${C.green};font-size:12px;margin-bottom:14px;font-weight:500}
+.vt-livedot{width:9px;height:9px;border-radius:50%;background:${C.green};box-shadow:0 0 0 0 ${C.green};animation:vtping 1.5s infinite}
+@keyframes vtping{0%{box-shadow:0 0 0 0 ${C.green}99}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.vt-monitor-grid{display:grid;grid-template-columns:300px 1fr;gap:16px}
+@media(max-width:900px){.vt-monitor-grid{grid-template-columns:1fr}}
+.heart-card b{font-size:26px;margin-top:10px}.heart-card small{color:${C.muted}}
+.vt-heartbeat{animation:vtbeat 1.1s ease-in-out infinite}
+@keyframes vtbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.12)}30%{transform:scale(1)}45%{transform:scale(1.08)}}
+.vt-vitals{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.vt-vitals{grid-template-columns:1fr}}
+.vt-vital-h{display:flex;align-items:center;gap:8px;font-size:12.5px;margin-bottom:4px}
+.vt-vital-h b{flex:1}.vt-vital-h em{font-style:normal;font-weight:600}
+
+/* assistant */
+.vt-chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 110px);background:linear-gradient(180deg,${C.panel2},${C.panel});border:1px solid ${C.line};border-radius:16px;overflow:hidden}
+.vt-chat-head{display:flex;gap:11px;align-items:center;padding:14px 18px;border-bottom:1px solid ${C.line}}
+.vt-chat-head b{font-size:14px;display:block}.vt-chat-head small{font-size:11px}
+.vt-chat-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.vt-msg{display:flex;gap:9px;max-width:80%}
+.vt-msg.user{margin-left:auto;flex-direction:row-reverse}
+.vt-bubble{background:${C.panel};border:1px solid ${C.line};padding:11px 14px;border-radius:14px;font-size:13.5px;line-height:1.55;white-space:pre-wrap}
+.vt-msg.user .vt-bubble{background:linear-gradient(135deg,${C.purple},${C.blue});border-color:transparent;color:#fff}
+.vt-bubble.typing{display:flex;align-items:center;gap:8px;color:${C.muted}}
+.vt-quick{display:flex;gap:8px;flex-wrap:wrap;padding:10px 18px;border-top:1px solid ${C.line}}
+.vt-quick button{background:${C.panel};border:1px solid ${C.line};color:${C.muted};padding:7px 12px;border-radius:20px;cursor:pointer;font-family:inherit;font-size:12px}
+.vt-quick button:hover:not(:disabled){color:${C.teal};border-color:${C.teal}}
+.vt-quick button:disabled{opacity:.4}
+.vt-chat-input{display:flex;gap:10px;padding:14px 18px;border-top:1px solid ${C.line}}
+.vt-chat-input input{flex:1;background:${C.panel};border:1px solid ${C.line};border-radius:11px;padding:12px 14px;color:${C.ink};font-family:inherit;font-size:13.5px;outline:none}
+.vt-chat-input input:focus{border-color:${C.teal}}
+.vt-chat-input button{background:linear-gradient(135deg,${C.teal},${C.blue});border:none;width:46px;border-radius:11px;color:#06181c;cursor:pointer;display:grid;place-items:center}
+.vt-chat-input button:disabled{opacity:.5}
+
+/* ── LANDING ── */
+.vt-landing{background:radial-gradient(1000px 600px at 80% -10%, #1a2d52 0,transparent 55%),radial-gradient(800px 500px at 10% 110%, #2e1a55 0,transparent 50%),${C.bg};min-height:100vh;padding:0}
+.vt-topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 36px;border-bottom:1px solid ${C.line}}
+.vt-topnav{display:flex;align-items:center;gap:22px;font-size:13.5px;color:${C.muted}}
+.vt-topnav a{cursor:pointer}.vt-topnav a:hover{color:${C.ink}}
+.vt-cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,${C.purple},${C.teal});color:#fff;border:none;padding:12px 20px;border-radius:11px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:.18s}
+.vt-cta:hover{transform:translateY(-2px);box-shadow:0 12px 28px -10px ${C.purple}}
+.vt-cta.sm{padding:9px 16px;font-size:13px}
+.vt-cta.ghost{background:${C.panel};border:1px solid ${C.line};color:${C.ink}}
+.vt-cta.full{width:100%;justify-content:center;margin-top:8px}
+.vt-hero{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding:50px 36px 30px;max-width:1280px;margin:0 auto}
+@media(max-width:900px){.vt-hero{grid-template-columns:1fr;text-align:center}}
+.vt-hero h1{font-size:clamp(34px,5vw,52px);line-height:1.05;font-weight:700;letter-spacing:-.02em}
+.grad{background:linear-gradient(90deg,${C.teal},${C.blue});-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad2{background:linear-gradient(90deg,${C.purple},${C.pink});-webkit-background-clip:text;background-clip:text;color:transparent}
+.vt-hero p{color:${C.muted};font-size:16px;line-height:1.6;margin:20px 0;max-width:46ch}
+.vt-hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.vt-hero-btns{justify-content:center}}
+.vt-trust{margin-top:30px}.vt-trust span{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:${C.muted}}
+.vt-trust div{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}
+.vt-trust em{font-style:normal;color:${C.muted};font-weight:600;font-size:13px;opacity:.7}
+.vt-hero-r{display:grid;place-items:center}
+.vt-twin-stage{position:relative;padding:20px}
+.vt-float{position:absolute;background:${C.panel2}dd;border:1px solid ${C.line};border-radius:12px;padding:10px 13px;font-size:12px;backdrop-filter:blur(8px);display:flex;align-items:center;gap:7px;box-shadow:0 8px 24px -10px #000}
+.vt-float b{font-size:22px;color:${C.teal}}.vt-float span{display:block;font-size:10px;color:${C.muted}}
+.vt-float-1{top:20px;right:-10px;flex-direction:column;align-items:flex-start}
+.vt-float-2{top:46%;left:-20px}.vt-float-3{bottom:40px;right:0}
+
+.vt-feat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;padding:20px 36px;max-width:1280px;margin:0 auto}
+@media(max-width:900px){.vt-feat-row{grid-template-columns:1fr 1fr}}
+.vt-feat{background:linear-gradient(180deg,${C.panel2},${C.panel});border:1px solid ${C.line};border-radius:14px;padding:18px;cursor:pointer;color:${C.ink};font-family:inherit;text-align:left;transition:.18s}
+.vt-feat:hover{transform:translateY(-3px);border-color:${C.teal}}
+.vt-feat-ic{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,${C.purple}33,${C.teal}33);display:grid;place-items:center;color:${C.teal};margin-bottom:12px}
+.vt-feat b{display:block;font-size:14px}.vt-feat small{color:${C.muted};font-size:11.5px}
+
+.vt-how{padding:40px 36px;max-width:1280px;margin:0 auto}
+.vt-how h2{font-size:24px;margin-bottom:24px}
+.vt-how-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:space-between}
+.vt-step{text-align:center;flex:1;min-width:120px}
+.vt-step-ic{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,${C.purple}33,${C.teal}33);border:1px solid ${C.line};display:grid;place-items:center;color:${C.teal};margin:0 auto 10px}
+.vt-step b{display:block;font-size:13px}.vt-step small{color:${C.muted};font-size:11px}
+.vt-step-arrow{color:${C.muted};flex:none}
+
+.vt-tech{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;padding:20px 36px 40px;max-width:1280px;margin:0 auto}
+@media(max-width:900px){.vt-tech{grid-template-columns:1fr}}
+.vt-tech-block,.vt-vision{background:linear-gradient(180deg,${C.panel2},${C.panel});border:1px solid ${C.line};border-radius:16px;padding:22px}
+.vt-tech h3,.vt-vision h3{font-size:17px;margin-bottom:16px}
+.vt-tech-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:700px){.vt-tech-grid{grid-template-columns:1fr 1fr}}
+.vt-tech-grid>div{display:flex;flex-direction:column;gap:7px}
+.vt-tech-grid b{font-size:12.5px;color:${C.teal};margin-bottom:3px}
+.vt-tech-grid span{font-size:12px;color:${C.muted}}
+.vt-vision p{color:${C.muted};line-height:1.6;font-size:13.5px}
+.vt-mono{margin-top:18px}.vt-mono>b{font-size:13px;display:block;margin-bottom:10px}
+.vt-mono>div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid ${C.line};font-size:12.5px}
+.vt-mono small{color:${C.muted}}
+
+.vt-trustbar{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;padding:24px 36px;border-top:1px solid ${C.line};max-width:1280px;margin:0 auto}
+@media(max-width:900px){.vt-trustbar{grid-template-columns:1fr 1fr}}
+.vt-trustbar>div{display:flex;gap:10px;align-items:center}
+.vt-trustbar b{font-size:12.5px;display:block}.vt-trustbar small{font-size:11px;color:${C.muted}}
+.vt-disc{justify-content:center;margin:0 36px 30px;border-radius:0}
+`;
