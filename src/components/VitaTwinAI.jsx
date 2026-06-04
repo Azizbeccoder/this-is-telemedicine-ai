@@ -377,3 +377,138 @@ function Diagnosis() {
 }
 
 // ── DIGITAL TWIN SIM ─────────────────────────────────────────────────────---
+function Twin() {
+  const scenarios = [
+    { i: TrendingDown, t: "Weight Loss", s: "Fitness Plan" },
+    { i: Zap, t: "High Stress", s: "Work Pressure" },
+    { i: Moon, t: "Better Sleep", s: "8+ Hours" },
+    { i: Droplet, t: "New Medication", s: "Treatment Impact" },
+  ];
+  const [active, setActive] = useState(0);
+  const [run, setRun] = useState(false);
+  const results = [["Energy", "+25%"], ["Immunity", "+18%"], ["Heart Health", "+20%"], ["Mental Clarity", "+30%"]];
+  return (
+    <>
+      <TopBar title="Digital Twin Simulation" />
+      <div className="vt-grid-twin">
+        <div className="vt-card">
+          <h3>Simulate Scenarios</h3>
+          <small className="vt-sub">See how your body reacts to different scenarios</small>
+          <div className="vt-scenarios">
+            {scenarios.map((s, i) => (
+              <button key={s.t} className={"vt-scenario" + (active === i ? " on" : "")} onClick={() => { setActive(i); setRun(false); }}>
+                <s.i size={18} /><div><b>{s.t}</b><small>{s.s}</small></div>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="vt-card center">
+          <TwinFigure size={280} />
+          <button className="vt-cta" onClick={() => setRun(true)} style={{ marginTop: 14 }}><Play size={14} /> Run New Simulation</button>
+        </div>
+        <div className="vt-card">
+          <h3>Simulation Result</h3>
+          <p className="vt-sub">{run ? "Your body will improve significantly in 30 days" : "Run a simulation to see projected results"}</p>
+          <div className="vt-sim-results">
+            {results.map(([t, v]) => (
+              <div key={t} className="vt-sim-row"><span>{t}</span><b style={{ color: run ? C.green : C.muted, opacity: run ? 1 : 0.4 }}>{run ? v : "—"}</b></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── ANALYTICS ───────────────────────────────────────────────────────────---
+function Analytics() {
+  const [range, setRange] = useState("7 Days");
+  const metrics = [["Heart Rate", "72", "bpm", C.pink, trend(72, 12, 8)], ["Blood Oxygen", "98", "%", C.teal, trend(98, 12, 2)], ["Stress Level", "24", "Low", C.amber, trend(24, 12, 10)], ["Sleep Quality", "85", "Good", C.purple, trend(85, 12, 9)]];
+  return (
+    <>
+      <TopBar title="Health Analytics" />
+      <div className="vt-tabs between">
+        <div>{["Overview", "Trends", "Compare", "Insights"].map((t, i) => <button key={t} className={i === 0 ? "on" : ""}>{t}</button>)}</div>
+        <div className="vt-range">{["7 Days", "30 Days", "90 Days", "1 Year"].map((r) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{r}</button>)}</div>
+      </div>
+      <div className="vt-metric-row">
+        {metrics.map(([t, v, u, c, d]) => (
+          <div key={t} className="vt-card metric"><small>{t}</small><b>{v} <em>{u}</em></b><Spark data={d} color={c} /></div>
+        ))}
+      </div>
+      <div className="vt-grid-2">
+        <div className="vt-card">
+          <h3>Health Trend Overview</h3>
+          <ResponsiveContainer width="100%" height={240}>
+            <LineChart data={healthTrend}>
+              <XAxis dataKey="day" stroke={C.muted} fontSize={11} /><YAxis stroke={C.muted} fontSize={11} />
+              <Tooltip contentStyle={{ background: C.panel2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink }} />
+              <Line type="monotone" dataKey="heart" stroke={C.pink} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="sleep" stroke={C.purple} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="stress" stroke={C.amber} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="activity" stroke={C.teal} strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+          <div className="vt-legend">{[["Heart Rate", C.pink], ["Sleep", C.purple], ["Stress", C.amber], ["Activity", C.teal]].map(([l, c]) => <span key={l}><i style={{ background: c }} />{l}</span>)}</div>
+        </div>
+        <div className="vt-card">
+          <h3>Health Distribution</h3>
+          <ResponsiveContainer width="100%" height={240}>
+            <PieChart>
+              <Pie data={distribution} dataKey="v" nameKey="name" innerRadius={58} outerRadius={92} paddingAngle={3}>
+                {distribution.map((d) => <Cell key={d.name} fill={d.c} />)}
+              </Pie>
+              <Tooltip contentStyle={{ background: C.panel2, border: `1px solid ${C.line}`, borderRadius: 8, color: C.ink }} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="vt-legend">{distribution.map((d) => <span key={d.name}><i style={{ background: d.c }} />{d.name} {d.v}%</span>)}</div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── MONITORING ──────────────────────────────────────────────────────────---
+function Monitoring() {
+  const [vitals, setVitals] = useState({ hr: 72, bp: "120/80", o2: 98, temp: 36.6 });
+  useEffect(() => {
+    const t = setInterval(() => setVitals((v) => ({
+      hr: 68 + Math.round(Math.random() * 10), bp: v.bp, o2: 97 + Math.round(Math.random() * 2), temp: (36.4 + Math.random() * 0.5).toFixed(1),
+    })), 1800);
+    return () => clearInterval(t);
+  }, []);
+  const rows = [
+    { i: Heart, n: "Heart Rate", v: `${vitals.hr} bpm`, c: C.pink, d: trend(72, 20, 8) },
+    { i: Activity, n: "Blood Pressure", v: `${vitals.bp} mmHg`, c: C.blue, d: trend(80, 20, 5) },
+    { i: Wind, n: "Blood Oxygen", v: `${vitals.o2}%`, c: C.teal, d: trend(98, 20, 2) },
+    { i: Zap, n: "ECG", v: "Normal", c: C.green, d: trend(50, 20, 30) },
+    { i: Flame, n: "Body Temp", v: `${vitals.temp} °C`, c: C.amber, d: trend(36, 20, 1) },
+  ];
+  return (
+    <>
+      <TopBar title="Real-time Monitoring" />
+      <div className="vt-live"><span className="vt-livedot" /> LIVE · streaming from connected devices</div>
+      <div className="vt-monitor-grid">
+        <div className="vt-card center heart-card">
+          <div className="vt-heartbeat"><Heart size={130} fill={C.red} stroke={C.red} style={{ filter: `drop-shadow(0 0 24px ${C.red})` }} /></div>
+          <b>{vitals.hr} bpm</b><small>Cardiac rhythm nominal</small>
+        </div>
+        <div className="vt-vitals">
+          {rows.map((r) => (
+            <div key={r.n} className="vt-card vital">
+              <div className="vt-vital-h"><span style={{ color: r.c }}><r.i size={16} /></span><b>{r.n}</b><em style={{ color: r.c }}>{r.v}</em></div>
+              <ResponsiveContainer width="100%" height={40}><AreaChart data={r.d}><Area type="monotone" dataKey="v" stroke={r.c} fill={r.c} fillOpacity={0.15} strokeWidth={1.8} /></AreaChart></ResponsiveContainer>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── AI ASSISTANT (real Claude API) ──────────────────────────────────────---
+// API endpoint for live Claude calls. Defaults to the bundled dev proxy
+// (server.js, http://localhost:8787) so the secret key stays server-side.
+// Override at build/run time with VITE_ANTHROPIC_ENDPOINT if needed.
+const ANTHROPIC_ENDPOINT =
+  import.meta.env.VITE_ANTHROPIC_ENDPOINT || "/api/anthropic";
