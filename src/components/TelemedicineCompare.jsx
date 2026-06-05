@@ -62,3 +62,55 @@ const SAMPLES = [
   "I get chest tightness when I climb stairs but it goes away when I rest.",
   "I've been feeling really down and tired for weeks and can't sleep.",
 ];
+
+function useColumns() {
+  // simple responsive helper
+  const [n, setN] = useState(typeof window !== "undefined" && window.innerWidth < 900 ? 1 : 3);
+  useEffect(() => {
+    const fn = () => setN(window.innerWidth < 900 ? 1 : window.innerWidth < 1280 ? 2 : 3);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+  return n;
+}
+
+// API endpoint for live Claude calls. Defaults to the bundled dev proxy
+// (server.js) so the secret key never reaches the browser. Override with
+// VITE_ANTHROPIC_ENDPOINT if you host the proxy elsewhere.
+const ANTHROPIC_ENDPOINT =
+  import.meta.env.VITE_ANTHROPIC_ENDPOINT || "/api/anthropic";
+
+async function callMode(system, query, modeId) {
+  const res = await fetch(ANTHROPIC_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system,
+      messages: [{ role: "user", content: query }],
+      modeId,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  if (!res.body) throw new Error("No stream");
+
+  async function callMode(system, query, modeId) {
+  const res = await fetch(ANTHROPIC_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system,
+      messages: [{ role: "user", content: query }],
+      modeId,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`API ${res.status}`);
+
+  const data = await res.json();
+  console.log("[FRONTEND RECEIVED]:", data);
+  return data.message; // ✅ FIX
+}
+
+  return result;
+}
