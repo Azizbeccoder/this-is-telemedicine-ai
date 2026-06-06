@@ -82,3 +82,14 @@ vitatwin-ai/
         ├── VitaTwinAI.jsx
         └── TelemedicineCompare.jsx
 ```
+
+## Tech
+
+React 18 · Vite · Recharts · lucide-react
+
+## Build for production
+
+```bash
+npm run build      # outputs to dist/
+npm run preview
+```
