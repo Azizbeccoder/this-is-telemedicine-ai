@@ -1,0 +1,59 @@
+═════════════════════════════════════════════════════════════
+VITATWIN PROJECT - QUICK START
+═════════════════════════════════════════════════════════════
+
+STEP 1: One-time setup (run once)
+────────────────────────────────
+npm install
+npm install express cors dotenv
+
+STEP 2: Start Ollama (if not running)
+──────────────────────────────────
+- Search for "Ollama" in Windows Start
+- Click to open it
+- You should see a llama icon in system tray (bottom-right)
+
+STEP 3: Open TWO PowerShell windows in this project folder
+
+WINDOW 1 - Start the proxy:
+──────────────────────────
+node server.js
+
+You should see:
+  Server on http://localhost:8787  (model: llama3.2 via http://localhost:11434)
+
+WINDOW 2 - Start the app:
+─────────────────────────
+npm run dev
+
+You should see:
+  ➜  Local:   http://localhost:5173/
+
+STEP 4: Open browser
+───────────────────
+Open http://localhost:5173 in your browser
+
+STEP 5: Use AI Assistant
+────────────────────────
+1. Click "AI Assistant" in the left menu
+2. Type a question (e.g., "How can I sleep better?")
+3. Click Send
+
+Wait 5-10 seconds for the first reply.
+
+═════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═════════════════════════════════════════════════════════════
+
+Q: "Couldn't reach the AI service"
+A: Make sure Window 1 (node server.js) is running. Check that it shows:
+   Server on http://localhost:8787...
+
+Q: Port already in use
+A: Something is already running on that port. Close other apps or use:
+   $env:PORT=8788; node server.js
+
+Q: Ollama not found
+A: Open the Ollama app from Windows Start menu.
+
+═════════════════════════════════════════════════════════════

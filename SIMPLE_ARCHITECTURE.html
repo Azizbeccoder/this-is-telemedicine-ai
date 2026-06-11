@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaTwin AI - Simple Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .layer {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .layer.horizontal {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .layer.vertical {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+            cursor: default;
+        }
+
+        .box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .box.frontend {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        }
+
+        .box.backend {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .box.ai {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .box.database {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .box h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .box p {
+            font-size: 14px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .box-list {
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .box-list div {
+            margin: 4px 0;
+        }
+
+        .arrow {
+            font-size: 32px;
+            color: #667eea;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        .arrow-label {
+            font-size: 12px;
+            color: #666;
+            margin: 0 10px;
+            font-weight: 600;
+        }
+
+        .group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .description {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .description h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .description p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .box {
+                min-width: 150px;
+                padding: 20px;
+            }
+
+            .box h3 {
+                font-size: 16px;
+            }
+
+            .box p, .box-list {
+                font-size: 12px;
+            }
+
+            .group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏥 VitaTwin AI Platform</h1>
+            <p>Simple System Architecture</p>
+        </div>
+
+        <!-- Diagram -->
+        <div class="diagram">
+
+            <!-- Layer 1: Frontend -->
+            <div class="layer vertical">
+                <div class="box frontend">
+                    <h3>📱 Frontend</h3>
+                    <p-list class="box-list">
+                        <div>✓ React 18</div>
+                        <div>✓ User Dashboard</div>
+                        <div>✓ Health Tracking</div>
+                        <div>✓ Web & Mobile</div>
+                    </p-list>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="arrow-label">HTTP/REST API</div>
+            </div>
+
+            <!-- Layer 2: Backend Server -->
+            <div class="layer vertical">
+                <div class="box backend">
+                    <h3>⚙️ Backend Server</h3>
+                    <p-list class="box-list">
+                        <div>✓ Express.js</div>
+                        <div>✓ Port 8787</div>
+                        <div>✓ API Routes</div>
+                        <div>✓ Request Handler</div>
+                    </p-list>
+                </div>
+                <div class="arrow">⬇️</div>
+                <div class="arrow-label">Processing & Routing</div>
+            </div>
+
+            <!-- Layer 3: Two main systems -->
+            <div class="group">
+                <!-- AI System -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div class="box ai">
+                        <h3>🤖 AI Engine</h3>
+                        <p-list class="box-list">
+                            <div>✓ Ollama</div>
+                            <div>✓ Local Models</div>
+                            <div>✓ Port 11434</div>
+                            <div>✓ Predictions</div>
+                        </p-list>
+                    </div>
+                    <div class="arrow-label">AI Processing</div>
+                </div>
+
+                <!-- Database -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                    <div class="box database">
+                        <h3>💾 Storage</h3>
+                        <p-list class="box-list">
+                            <div>✓ localStorage</div>
+                            <div>✓ User Data</div>
+                            <div>✓ Health Records</div>
+                            <div>✓ Privacy-First</div>
+                        </p-list>
+                    </div>
+                    <div class="arrow-label">Data Storage</div>
+                </div>
+            </div>
+
+            <!-- Arrow back to backend -->
+            <div style="margin-top: 20px;">
+                <div class="arrow-label">Both systems connected to Backend</div>
+            </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Description -->
+        <div class="description">
+            <h4>How It Works</h4>
+            <p>
+                <strong>User opens VitaTwin (Frontend)</strong> →
+                <strong>Sends request to Server</strong> →
+                <strong>Server processes request</strong> →
+                <strong>Calls AI for analysis</strong> OR <strong>Stores/retrieves data</strong> →
+                <strong>Returns result to user</strong>
+            </p>
+            <br>
+            <p>
+                <strong>All data stays private:</strong> No cloud storage, no external APIs. User controls everything. Ollama runs locally. Complete privacy protection.
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>

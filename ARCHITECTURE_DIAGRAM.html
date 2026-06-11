@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaTwin AI - System Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title h1 {
+            font-size: 28px;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .title p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .architecture {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* TIER 1: USERS & CLIENTS */
+        .tier {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tier-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-left: 10px;
+        }
+
+        .tier-content {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .block {
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            min-width: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .block-icon {
+            font-size: 24px;
+        }
+
+        /* Color scheme */
+        .blue { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .green { background: linear-gradient(135deg, #10b981, #059669); }
+        .orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        /* Connections */
+        .connector {
+            text-align: center;
+            color: #999;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+            margin: 20px 0;
+        }
+
+        /* Grid layout for multiple items */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            justify-items: center;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            justify-items: center;
+        }
+
+        /* Section box */
+        .section {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #0ea5e9;
+        }
+
+        .sub-blocks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .sub-block {
+            padding: 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Legend */
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .title h1 {
+                font-size: 22px;
+            }
+
+            .block {
+                min-width: 140px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title -->
+        <div class="title">
+            <h1>🏥 VITATWIN AI PLATFORM - SYSTEM ARCHITECTURE</h1>
+            <p>Complete Health Monitoring & AI Diagnosis Platform</p>
+        </div>
+
+        <!-- Architecture Diagram -->
+        <div class="architecture">
+
+            <!-- TIER 1: USERS & CLIENTS -->
+            <div class="tier">
+                <div class="tier-label">📱 USERS & CLIENTS</div>
+                <div class="tier-content grid-3">
+                    <div class="block blue">
+                        <div class="block-icon">📱</div>
+                        <div>Patient Mobile App</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Health Monitoring</small>
+                    </div>
+                    <div class="block blue">
+                        <div class="block-icon">💻</div>
+                        <div>Web Browser</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Dashboard Access</small>
+                    </div>
+                    <div class="block blue">
+                        <div class="block-icon">🏥</div>
+                        <div>Provider Portal</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Doctor Dashboard</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 2: SECURITY GATEWAY -->
+            <div class="tier">
+                <div class="tier-label">🔐 SECURITY GATEWAY</div>
+                <div class="tier-content">
+                    <div class="section" style="flex: 1;">
+                        <div class="section-title">Authentication & Authorization</div>
+                        <div class="sub-blocks">
+                            <div class="sub-block">Login/Signup</div>
+                            <div class="sub-block">JWT Tokens</div>
+                            <div class="sub-block">Role-Based Access</div>
+                            <div class="sub-block">Session Management</div>
+                            <div class="sub-block">HIPAA Compliance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 3: API LAYER -->
+            <div class="tier">
+                <div class="tier-label">🔌 API GATEWAY</div>
+                <div class="tier-content grid-3">
+                    <div class="block green">
+                        <div class="block-icon">📊</div>
+                        <div>Health Endpoints</div>
+                        <small style="font-size: 11px; opacity: 0.9;">/vitals, /progress</small>
+                    </div>
+                    <div class="block green">
+                        <div class="block-icon">⚕️</div>
+                        <div>Treatment Endpoints</div>
+                        <small style="font-size: 11px; opacity: 0.9;">/predict, /simulate</small>
+                    </div>
+                    <div class="block green">
+                        <div class="block-icon">🤖</div>
+                        <div>AI Endpoints</div>
+                        <small style="font-size: 11px; opacity: 0.9;">/diagnosis, /chat</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 4: APPLICATION LAYER -->
+            <div class="tier">
+                <div class="tier-label">⚙️ APPLICATION LAYER</div>
+                <div class="section">
+                    <div class="section-title">Express.js Server (Port 8787)</div>
+                    <div class="sub-blocks">
+                        <div class="sub-block">Request Router</div>
+                        <div class="sub-block">Data Processor</div>
+                        <div class="sub-block">Cache Manager</div>
+                        <div class="sub-block">Error Handler</div>
+                        <div class="sub-block">Logger</div>
+                        <div class="sub-block">Middleware Stack</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 5: INTELLIGENT ORCHESTRATOR -->
+            <div class="tier">
+                <div class="tier-label">🧠 INTELLIGENT ORCHESTRATOR</div>
+                <div class="tier-content">
+                    <div class="section" style="flex: 1;">
+                        <div class="section-title">AI Request Orchestrator</div>
+                        <div style="text-align: center; padding: 15px; color: #666; font-size: 13px;">
+                            Routes requests to appropriate AI models based on task type<br/>
+                            Manages model selection, timeouts, and fallback responses
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 6: AI INFERENCE ENGINES -->
+            <div class="tier">
+                <div class="tier-label">🤖 AI INFERENCE ENGINES</div>
+                <div class="tier-content grid-2">
+                    <div class="section">
+                        <div class="section-title" style="margin-bottom: 12px;">Local AI Cluster</div>
+                        <div class="sub-blocks">
+                            <div class="sub-block" style="background: #e3f2fd; color: #1976d2;">Mistral 7B</div>
+                            <div class="sub-block" style="background: #e3f2fd; color: #1976d2;">Phi3 3.8B</div>
+                            <div class="sub-block" style="background: #e3f2fd; color: #1976d2;">Llama3 8B</div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title" style="margin-bottom: 12px;">Processing Pipeline</div>
+                        <div class="sub-blocks">
+                            <div class="sub-block" style="background: #fff3e0; color: #f57c00;">Symptom Analysis</div>
+                            <div class="sub-block" style="background: #fff3e0; color: #f57c00;">Treatment Predict</div>
+                            <div class="sub-block" style="background: #fff3e0; color: #f57c00;">Drug Checking</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 7: DATA LAYER -->
+            <div class="tier">
+                <div class="tier-label">💾 DATA LAYER</div>
+                <div class="tier-content grid-2">
+                    <div class="block purple">
+                        <div class="block-icon">🖥️</div>
+                        <div>Local Storage</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Client-side Data</small>
+                    </div>
+                    <div class="block pink">
+                        <div class="block-icon">☁️</div>
+                        <div>Cloud Database</div>
+                        <small style="font-size: 11px; opacity: 0.9;">PostgreSQL (Future)</small>
+                    </div>
+                    <div class="block purple">
+                        <div class="block-icon">📋</div>
+                        <div>Knowledge Base</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Medical Data</small>
+                    </div>
+                    <div class="block pink">
+                        <div class="block-icon">⚡</div>
+                        <div>Cache Layer</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Redis (Future)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connector">⬇️</div>
+
+            <!-- TIER 8: CORE SERVICES -->
+            <div class="tier">
+                <div class="tier-label">🎯 CORE SERVICES</div>
+                <div class="tier-content grid-3">
+                    <div class="block red">
+                        <div class="block-icon">📊</div>
+                        <div>Health Monitoring</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Vitals & Progress</small>
+                    </div>
+                    <div class="block red">
+                        <div class="block-icon">💊</div>
+                        <div>Treatment Mgmt</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Predictions & Alerts</small>
+                    </div>
+                    <div class="block red">
+                        <div class="block-icon">🔔</div>
+                        <div>Notifications</div>
+                        <small style="font-size: 11px; opacity: 0.9;">Reminders & Alerts</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- LEGEND -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color blue"></div>
+                    <span><strong>Users & Clients</strong> - Frontend Applications</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color green"></div>
+                    <span><strong>Gateway</strong> - API & Security</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color orange"></div>
+                    <span><strong>Orchestrator</strong> - Request Management</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color purple"></div>
+                    <span><strong>Local Systems</strong> - Client-side Storage</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color pink"></div>
+                    <span><strong>Cloud Systems</strong> - Server-side Storage</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color red"></div>
+                    <span><strong>Services</strong> - Core Features</span>
+                </div>
+            </div>
+
+            <!-- Key Features -->
+            <div style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 10px; border-left: 4px solid #0ea5e9;">
+                <div class="section-title" style="margin-bottom: 12px;">✨ KEY FEATURES</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
+                    <div>✓ Real-time Health Monitoring</div>
+                    <div>✓ AI-Powered Diagnosis</div>
+                    <div>✓ Treatment Prediction & Simulation</div>
+                    <div>✓ Drug Interaction Checking</div>
+                    <div>✓ Privacy-First Architecture</div>
+                    <div>✓ HIPAA Compliant (Future)</div>
+                    <div>✓ Offline Capability</div>
+                    <div>✓ Real-time Notifications</div>
+                    <div>✓ Digital Twin Simulation</div>
+                    <div>✓ Doctor Collaboration</div>
+                    <div>✓ Data Export & Backup</div>
+                    <div>✓ Advanced Analytics</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
