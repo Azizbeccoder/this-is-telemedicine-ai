@@ -21,6 +21,6 @@
     "@vitejs/plugin-react": "^4.3.1",
     "concurrently": "^10.0.3",
     "pptxgenjs": "^4.0.1",
-    "vite": "^5.3.1"
+    "vite": "^5.4.2"
   }
 }
