@@ -1,6 +1,6 @@
 # VitaTwin AI — Digital Twin Health Platform
 
-Two React projects in one repo:
+Two React apps living in one repo:
 
 - **VitaTwin AI Platform** — full multi-view health platform (landing, dashboard, AI diagnosis, digital twin simulation, analytics, real-time monitoring, AI assistant).
 - **Telemedicine Model Compare** — sends one patient query to three model strategies side-by-side with a scoring rubric.
