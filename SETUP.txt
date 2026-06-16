@@ -13,6 +13,9 @@ STEP 2: Start Ollama (if not running)
 - Click to open it
 - You should see a llama icon in system tray (bottom-right)
 
+NOTE: if Ollama isn't running, the AI Assistant falls back to a
+demo reply instead of failing - the rest of the app still works.
+
 STEP 3: Open TWO PowerShell windows in this project folder
 
 WINDOW 1 - Start the proxy:
