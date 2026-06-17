@@ -57,7 +57,7 @@ app.post("/api/anthropic", async (req, res) => {
     }
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
     const r = await fetch("http://localhost:11434/api/chat", {
       method: "POST",
