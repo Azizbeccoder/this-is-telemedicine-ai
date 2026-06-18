@@ -43,7 +43,7 @@ app.post("/api/anthropic", async (req, res) => {
     const { system, messages = [], modeId } = req.body || {};
 
     const model = MODEL_MAP[modeId] || "mistral";
-    console.log(`[OLLAMA] Using model: ${model}`);
+    console.log(`[OLLAMA] Using model: ${model} (mode: ${modeId || "default"})`);
 
     // Check if Ollama is available
     const ollamaAvailable = await isOllamaAvailable();
