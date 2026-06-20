@@ -93,7 +93,7 @@ function TopBar({ title, subtitle }) {
       </div>
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 7, background: C.panel, border: `1px solid ${C.line}`, borderRadius: 9, padding: "7px 11px" }}>
-          <Search size={14} /><input placeholder="Search..." style={{ background: "none", border: "none", outline: "none", color: C.ink, fontFamily: "inherit", fontSize: 13, width: 150 }} />
+          <Search size={14} /><input placeholder="Search..." style={{ background: "none", border: "none", outline: "none", color: C.ink, fontFamily: "inherit", fontSize: 13, width: 170 }} />
         </div>
         <button style={{ background: C.panel, border: `1px solid ${C.line}`, color: C.muted, width: 34, height: 34, borderRadius: 9, display: "grid", placeItems: "center", cursor: "pointer" }}><Bell size={16} /></button>
         <button style={{ background: C.panel, border: `1px solid ${C.line}`, color: C.muted, width: 34, height: 34, borderRadius: 9, display: "grid", placeItems: "center", cursor: "pointer" }}><Settings size={16} /></button>
