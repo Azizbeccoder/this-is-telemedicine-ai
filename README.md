@@ -31,6 +31,7 @@ components already expect, so no front-end edits are needed.
 # 1. Install Ollama from https://ollama.com  (it then runs on :11434)
 # 2. Pull a model
 ollama pull llama3.2
+# check installed models any time with: ollama list
 # 3. Proxy deps
 npm install express cors dotenv
 ```
