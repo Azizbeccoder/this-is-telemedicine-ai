@@ -335,6 +335,34 @@
       "contraindications": ["Liver disease", "Pregnancy", "Muscle disorders"],
       "benefits": ["Very potent", "Reduces cardiovascular events", "Once daily"],
       "timeline": "4-6 weeks for full effect"
+    },
+    {
+      "id": "clopidogrel",
+      "name": "Clopidogrel",
+      "type": "Cardiovascular",
+      "category": "Antiplatelet",
+      "dosage": "75mg daily",
+      "baseEffectiveness": 80,
+      "description": "Prevents blood clots after cardiovascular events",
+      "sideEffects": ["Bruising", "Bleeding risk", "GI upset"],
+      "interactions": ["Omeprazole", "NSAIDs", "Warfarin"],
+      "contraindications": ["Active bleeding", "Severe liver disease"],
+      "benefits": ["Reduces recurrent events", "Once daily dosing"],
+      "timeline": "Immediate antiplatelet effect"
+    },
+    {
+      "id": "amlodipine",
+      "name": "Amlodipine",
+      "type": "Hypertension",
+      "category": "Calcium Channel Blocker",
+      "dosage": "5-10mg daily",
+      "baseEffectiveness": 83,
+      "description": "Relaxes blood vessels to lower blood pressure",
+      "sideEffects": ["Ankle swelling", "Flushing", "Headache"],
+      "interactions": ["Simvastatin", "Grapefruit juice"],
+      "contraindications": ["Severe aortic stenosis"],
+      "benefits": ["Long half-life", "Well tolerated", "Once daily"],
+      "timeline": "1-2 weeks for full effect"
     }
   ]
 }
