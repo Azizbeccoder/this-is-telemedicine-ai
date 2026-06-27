@@ -1,5 +1,9 @@
 # VitaTwin AI - Project Completion Status
 
+## ⚠️ Known Issues
+- AI Assistant needs a local Ollama install to give live answers
+- Bundle size warning on `vite build` (single-file app, not code-split yet)
+
 ## ✅ COMPLETED (25+ Features)
 
 ### **Core Features**
