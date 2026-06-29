@@ -85,7 +85,7 @@ app.post("/api/anthropic", async (req, res) => {
 
     res.json({
       type: "success",
-      message: data.message?.content || "Demo response",
+      message: data.message?.content?.trim() || "Demo response - the model returned an empty reply.",
     });
 
   } catch (e) {
