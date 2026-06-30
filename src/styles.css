@@ -778,6 +778,9 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
+.vt-hover-lift { transition: transform var(--transition-fast); }
+.vt-hover-lift:hover { transform: translateY(-2px); }
+
 /* ==================== UTILITY CLASSES ==================== */
 .gradient-text {
   background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
