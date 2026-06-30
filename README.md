@@ -78,6 +78,7 @@ vitatwin-ai/
 ├── server.js                 # optional Anthropic API proxy
 └── src/
     ├── main.jsx
+    ├── treatmentDatabase.json # seed data for the treatment simulator
     ├── App.jsx               # switcher between the two apps
     └── components/
         ├── VitaTwinAI.jsx
