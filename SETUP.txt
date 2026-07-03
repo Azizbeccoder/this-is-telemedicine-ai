@@ -1,5 +1,5 @@
 ═════════════════════════════════════════════════════════════
-VITATWIN PROJECT - QUICK START
+VITATWIN PROJECT — QUICK START
 ═════════════════════════════════════════════════════════════
 
 STEP 1: One-time setup (run once)
