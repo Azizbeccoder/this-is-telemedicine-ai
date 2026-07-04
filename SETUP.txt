@@ -36,6 +36,9 @@ STEP 4: Open browser
 ───────────────────
 Open http://localhost:5173 in your browser
 
+TROUBLESHOOTING: if port 5173 or 8787 is already in use, close the
+other process or change the port in vite.config.js / server.js.
+
 STEP 5: Use AI Assistant
 ────────────────────────
 1. Click "AI Assistant" in the left menu
