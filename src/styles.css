@@ -760,6 +760,8 @@ body > div {
   animation: fadeIn 0.5s ease-out;
 }
 
+.vt-nav-link:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
+
 /* ==================== FOCUS STATES ==================== */
 button:focus-visible {
   outline: 2px solid var(--accent-cyan);
