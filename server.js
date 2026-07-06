@@ -25,7 +25,7 @@ const MODEL_MAP = {
   clinical: "llama3:8b",
 };
 
-// ✅ Helper: Check if Ollama is responding
+// ✅ Helper: Check if Ollama is responding (cheap call, not cached)
 async function isOllamaAvailable() {
   try {
     const res = await fetch("http://localhost:11434/api/tags", { signal: AbortSignal.timeout(2500) });
