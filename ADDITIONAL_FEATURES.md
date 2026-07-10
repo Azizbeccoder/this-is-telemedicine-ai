@@ -1,5 +1,7 @@
 # 🚀 Additional Features You Can Add to VitaTwin AI
 
+> Status: Medical History Timeline is next up on the roadmap.
+
 ## ⭐ HIGH IMPACT FEATURES (Recommended)
 
 ### **1. Medical History Timeline**
