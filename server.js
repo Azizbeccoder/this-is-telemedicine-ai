@@ -102,7 +102,8 @@ app.post("/api/predict-treatment", async (req, res) => {
   console.log("\n[TREATMENT PREDICTION] Received request");
 
   try {
-    const { treatmentName, userProfile = {} } = req.body || {};
+    const { treatmentName: rawTreatmentName, userProfile = {} } = req.body || {};
+    const treatmentName = typeof rawTreatmentName === "string" ? rawTreatmentName.trim() : rawTreatmentName;
 
     if (!treatmentName) {
       return res.status(400).json({
