@@ -66,7 +66,7 @@ Open **http://localhost:8787**.
 > server they can reach, with enough RAM/GPU for the model — then point them at that
 > server's URL. The model never leaves your hardware, so there's no API key to expose.
 
-The charts, vitals, and all other UI use mock data and work with no setup.
+The charts, vitals, and all other UI use mock data and work with no setup at all - only the AI Assistant and model comparison need Ollama.
 
 ## Project structure
 
