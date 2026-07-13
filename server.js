@@ -108,7 +108,7 @@ app.post("/api/predict-treatment", async (req, res) => {
     if (!treatmentName) {
       return res.status(400).json({
         type: "error",
-        error: { message: "Treatment name required" }
+        error: { message: "Treatment name is required" }
       });
     }
 
