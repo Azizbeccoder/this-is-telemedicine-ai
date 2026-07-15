@@ -1,5 +1,7 @@
 # VitaTwin AI - System Design Document
 
+> Demo/simulation project - not a medical device, not for clinical use.
+
 ---
 
 ## 📋 TABLE OF CONTENTS
