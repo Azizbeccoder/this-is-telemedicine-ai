@@ -2668,7 +2668,7 @@ export default function VitaTwinAI() {
   });
 
   const handleLogin = (userData) => {
-    setUser(userData);
+    setUser((prev) => (prev?.id === userData?.id ? prev : userData));
     setView("profile");
   };
 
