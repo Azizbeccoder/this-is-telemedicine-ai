@@ -1,5 +1,8 @@
 # ✨ Professional CSS Styling Improvements
 
+## Later pass
+- Softer shadows, added focus-visible states, new pill radius token.
+
 ## Overview
 Your VitaTwin app CSS has been completely upgraded to **production-grade professional styling** that looks like it was built by a $100K design agency.
 
