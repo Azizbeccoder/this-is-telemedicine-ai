@@ -635,6 +635,8 @@ a:hover {
   letter-spacing: 0.2px;
 }
 
+.vt-footer { padding-top: 32px; }
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 1200px) {
   .vt-features-grid {
