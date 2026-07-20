@@ -1,5 +1,7 @@
 # 🎨 VitaTwin AI - Theme Options
 
+_Open THEME_PREVIEW.html directly in a browser to compare options._
+
 ## Choose Your Brand Style!
 
 ### **Option 1: Modern Dark (Current - Premium)**
