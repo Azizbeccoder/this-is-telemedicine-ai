@@ -125,7 +125,7 @@ function Navigation({ go }) {
           <button onClick={() => go("about")} className="vt-nav-link">About</button>
         </div>
         <button className="vt-nav-cta" onClick={() => go("dashboard")}>
-          Launch <ChevronRight size={16} />
+          Get Started <ChevronRight size={16} />
         </button>
       </div>
     </nav>
