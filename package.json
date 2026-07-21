@@ -18,7 +18,7 @@
     "recharts": "^2.13.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^10.0.4",
     "pptxgenjs": "^4.0.1",
     "vite": "^5.4.2"
