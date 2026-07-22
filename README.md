@@ -18,6 +18,8 @@ npm run dev
 
 Then open http://localhost:5173
 
+Regenerate the walkthrough slide deck any time with `python gen_pptx.py`.
+
 ## AI chat (powered by Ollama — runs locally, no API key)
 
 The `AI Assistant` view and the Telemedicine comparison get real responses from a
