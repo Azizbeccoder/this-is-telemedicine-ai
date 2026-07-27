@@ -104,7 +104,7 @@ function TopBar({ title, subtitle }) {
 
 function Card({ title, children, style }) {
   return (
-    <div style={{ background: `linear-gradient(180deg, ${C.panel2}, ${C.panel})`, border: `1px solid ${C.line}`, borderRadius: 16, padding: 20, ...style }}>
+    <div style={{ background: `linear-gradient(180deg, ${C.panel2}, ${C.panel})`, border: `1px solid ${C.line}`, borderRadius: 14, padding: 20, ...style }}>
       {title && <h3 style={{ margin: "0 0 16px 0", fontSize: 15, fontWeight: 600 }}>{title}</h3>}
       {children}
     </div>
