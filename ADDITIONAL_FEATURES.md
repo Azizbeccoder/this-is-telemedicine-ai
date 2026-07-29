@@ -2,6 +2,8 @@
 
 > Status: Medical History Timeline is next up on the roadmap.
 
+The digital twin figure's pulse animation can be disabled via the `pulse` prop on `TwinFigure`.
+
 ## ⭐ HIGH IMPACT FEATURES (Recommended)
 
 ### **1. Medical History Timeline**
