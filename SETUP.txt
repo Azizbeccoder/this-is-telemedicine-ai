@@ -2,6 +2,8 @@
 VITATWIN PROJECT — QUICK START
 ═════════════════════════════════════════════════════════════
 
+FAQ: "Ollama not responding"? Start Ollama first, then the proxy.
+
 STEP 1: One-time setup (run once)
 ────────────────────────────────
 npm install
