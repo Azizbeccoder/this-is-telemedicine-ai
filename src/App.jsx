@@ -432,6 +432,7 @@ const ANTHROPIC_ENDPOINT = "/api/anthropic";
 const SYS = "You are VitaTwin AI, a friendly health assistant. Give helpful, concise wellness info in a warm tone. Demo assistant — not medical advice.";
 
 function Assistant() {
+  // note: relies on staying mounted for the request lifetime
   const [msgs, setMsgs] = useState([{ role: "assistant", content: "👋 Hi! I'm your VitaTwin AI assistant. Ask me anything about your health.\n\n*(Demo — not medical advice)*" }]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
