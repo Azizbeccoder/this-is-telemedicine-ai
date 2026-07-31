@@ -738,6 +738,8 @@ a:hover {
   }
 }
 
+@media (max-width: 1024px) { .vt-navbar-content { gap: 12px; } }
+
 /* ==================== ANIMATIONS ==================== */
 @keyframes fadeIn {
   from {
