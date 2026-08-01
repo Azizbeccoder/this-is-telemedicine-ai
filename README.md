@@ -70,6 +70,8 @@ Open **http://localhost:8787**.
 
 The charts, vitals, and all other UI use mock data and work with no setup at all - only the AI Assistant and model comparison need Ollama.
 
+See `PROJECT_STATUS.md` for the full feature checklist.
+
 ## Project structure
 
 ```
