@@ -86,7 +86,7 @@ const NAV = [
 
 function TopBar({ title, subtitle }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, paddingBottom: 12, borderBottom: `1px solid ${C.line}` }}>
       <div>
         <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{title}</h2>
         {subtitle && <p style={{ margin: "6px 0 0 0", fontSize: 13, color: C.muted }}>{subtitle}</p>}
