@@ -6,6 +6,7 @@ dist
 .vscode/*.local.json
 Thumbs.db
 
+
 # Vite writes these while reloading the config
 vite.config.js.timestamp-*
 
