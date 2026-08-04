@@ -9,6 +9,10 @@ Use the toggle at the top of the page to switch between them.
 
 > ⚠️ **Demo / simulation only.** All health data is fictional. This is **not** a medical device and not for clinical use.
 
+## Contributing
+
+This is a personal/demo project - issues and small PRs are welcome.
+
 ## Quick start
 
 ```bash
