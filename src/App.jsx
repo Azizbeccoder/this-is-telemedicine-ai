@@ -2701,7 +2701,7 @@ export default function VitaTwinAI() {
                 <User size={17} /> <span>My Profile</span>
               </button>
               {NAV.map((n) => (
-                <button key={n.id} onClick={() => setView(n.id)} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: view === n.id ? `linear-gradient(90deg,${C.purple}33,${C.teal}22)` : "none", color: view === n.id ? C.ink : C.muted, padding: "10px 12px", borderRadius: 10, cursor: "pointer", fontSize: "13.5px", fontFamily: "inherit", border: "none", textAlign: "left", transition: ".15s", boxShadow: view === n.id ? `inset 2px 0 0 ${C.teal}` : "none" }}>
+                <button key={n.id || n.label} onClick={() => setView(n.id)} style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", background: view === n.id ? `linear-gradient(90deg,${C.purple}33,${C.teal}22)` : "none", color: view === n.id ? C.ink : C.muted, padding: "10px 12px", borderRadius: 10, cursor: "pointer", fontSize: "13.5px", fontFamily: "inherit", border: "none", textAlign: "left", transition: ".15s", boxShadow: view === n.id ? `inset 2px 0 0 ${C.teal}` : "none" }}>
                   <n.icon size={17} /> <span>{n.label}</span>
                 </button>
               ))}
