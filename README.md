@@ -1,4 +1,4 @@
-# VitaTwin AI — Digital Twin Health Platform
+# VitaTwin AI — Digital Twin Health Platform (v1.1.0)
 
 Two React apps living in one repo:
 
